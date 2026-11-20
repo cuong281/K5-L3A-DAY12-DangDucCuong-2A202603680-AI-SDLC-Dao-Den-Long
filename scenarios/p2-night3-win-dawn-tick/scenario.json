@@ -4,14 +4,6 @@
  "random_drifters": false,
  "wind_enabled": false,
  "motes": [],
- "player": {
-  "pos": [
-   -20,
-   0,
-   -34
-  ],
-  "carried": 10
- },
  "lanterns": [
   {
    "id": "L1",
@@ -31,10 +23,6 @@
   },
   {
    "id": "L5",
-   "lit": true
-  },
-  {
-   "id": "L6",
    "lit": true
   }
  ],

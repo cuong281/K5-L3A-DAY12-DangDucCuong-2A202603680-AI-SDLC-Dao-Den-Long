@@ -4,7 +4,7 @@ const isNum = (v) => typeof v === 'number' && Number.isFinite(v);
 const isVec3 = (v) => Array.isArray(v) && v.length === 3 && v.every(isNum);
 const isNat = (v) => Number.isInteger(v) && v >= 0;
 const BUTTONS = ['jump', 'interact', 'pulse', 'dash', 'pause'];
-const SHADE_STATES = ['spawning', 'wander', 'chase', 'recoil', 'stunned'];
+const SHADE_STATES = ['spawning', 'wander', 'chase', 'recoil', 'stunned', 'drain'];
 const DRIFTER_STATES = ['idle', 'chase', 'flee', 'removed'];
 
 export function validateInputs(inp) {
@@ -34,7 +34,7 @@ export function validateScenario(sc) {
     const p = sc.player;
     if (!isObj(p)) return 'player must be an object';
     if (p.pos !== undefined && !isVec3(p.pos)) return 'player.pos must be [x, y, z]';
-    for (const k of ['carried', 'flames', 'invuln_ticks', 'dash_cd_ticks', 'pulse_cd_ticks', 'charm_ticks']) {
+    for (const k of ['carried', 'flames', 'invuln_ticks', 'dash_cd_ticks', 'pulse_cd_ticks', 'charm_ticks', 'successful_lights']) {
       if (p[k] !== undefined && !isNat(p[k])) return `player.${k} must be a non-negative integer`;
     }
   }
@@ -64,7 +64,7 @@ export function validateScenario(sc) {
     return null;
   };
   let err =
-    checkList('shades', sc.shades, SHADE_STATES, (s) => (s.state_ticks_left !== undefined && !isNat(s.state_ticks_left) ? 'state_ticks_left must be a non-negative integer' : null)) ||
+    checkList('shades', sc.shades, SHADE_STATES, (s) => (s.state_ticks_left !== undefined && !isNat(s.state_ticks_left) ? 'state_ticks_left must be a non-negative integer' : s.target_lantern_id !== undefined && typeof s.target_lantern_id !== 'string' ? 'target_lantern_id must be a string' : null)) ||
     checkList('drifters', sc.drifters, DRIFTER_STATES, (d) => (d.stolen !== undefined && !isNat(d.stolen) ? 'drifter stolen must be a non-negative integer' : null)) ||
     checkList('charms', sc.charms, [], (c) => (c.available !== undefined && typeof c.available !== 'boolean' ? 'charm available must be boolean' : null));
   if (err) return err;
@@ -75,6 +75,8 @@ export function validateScenario(sc) {
       if (l.pos !== undefined && !isVec3(l.pos)) return `lantern ${l.id} pos must be [x, y, z]`;
       if (l.deposited !== undefined && !isNat(l.deposited)) return `lantern ${l.id} deposited must be a non-negative integer`;
       if (l.lit !== undefined && typeof l.lit !== 'boolean') return `lantern ${l.id} lit must be boolean`;
+      if (l.ever_lit !== undefined && typeof l.ever_lit !== 'boolean') return `lantern ${l.id} ever_lit must be boolean`;
+      if (l.fuel !== undefined && !(isNum(l.fuel) && l.fuel >= 0 && l.fuel <= 100)) return `lantern ${l.id} fuel must be a number in [0, 100]`;
     }
   }
   if (sc.time_left_s !== undefined && !(isNum(sc.time_left_s) && sc.time_left_s >= 0)) return 'time_left_s must be a non-negative number';

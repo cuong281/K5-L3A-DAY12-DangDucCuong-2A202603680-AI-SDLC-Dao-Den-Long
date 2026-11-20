@@ -1,0 +1,38 @@
+{
+ "seed": 1,
+ "ticks": 2,
+ "snapshot_every": 1,
+ "why": "Đèn ever_lit đang tắt chỉ cần 5: mang 6 -> nạp 5, lantern_lit relight true, +5x5+40 = 65, relit_count 1, fuel 100, sức chứa 10+2x1 = 12.",
+ "expect": {
+  "events": [
+   {
+    "tick": 1,
+    "name": "lantern_lit",
+    "data": {
+     "lantern_id": "L1",
+     "relight": true
+    }
+   }
+  ],
+  "snapshots": [
+   {
+    "tick": 1,
+    "match": {
+     "score": 65,
+     "player": {
+      "carried": 1,
+      "capacity": 12
+     },
+     "lanterns": [
+      {
+       "id": "L1",
+       "lit": true,
+       "fuel": 100,
+       "relit_count": 1
+      }
+     ]
+    }
+   }
+  ]
+ }
+}

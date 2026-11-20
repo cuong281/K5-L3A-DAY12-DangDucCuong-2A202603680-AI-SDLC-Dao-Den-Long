@@ -2,23 +2,15 @@
  "seed": 1,
  "ticks": 300,
  "snapshot_every": 30,
- "why": "Bóng Mực ở trong 6 m khi L1 vừa thắp -> bị đẩy ra mép trong 30 tick (tới (0,1,19) ở tick 30), không gây sát thương. Sau đó bị chặn ở mép. Điểm 10x10+100=200.",
+ "why": "[P3 cập nhật: +5/đom đóm] Bóng Mực trong 6 m khi L1 vừa thắp -> bị đẩy ra mép trong 30 tick ((0,1,19) ở tick 30), không sát thương. Điểm 10x5+100=150.",
  "expect": {
   "events": [
    {
     "tick": 1,
-    "name": "deposit",
-    "data": {
-     "lantern_id": "L1",
-     "amount": 10,
-     "deposited": 10
-    }
-   },
-   {
-    "tick": 1,
     "name": "lantern_lit",
     "data": {
-     "lantern_id": "L1"
+     "lantern_id": "L1",
+     "relight": false
     }
    }
   ],
@@ -39,7 +31,7 @@
        ]
       }
      ],
-     "score": 200
+     "score": 150
     }
    },
    {

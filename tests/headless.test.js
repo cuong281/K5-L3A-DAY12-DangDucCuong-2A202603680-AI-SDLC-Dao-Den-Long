@@ -57,7 +57,8 @@ test('v1.1 snapshot shape + night_start event at tick 0', () => {
     const s = r.lines[0];
     assert.equal(s.night, n);
     assert.deepEqual(Object.keys(s.wind).sort(), ['active', 'dir_deg']);
-    for (const k of ['pos', 'vel', 'grounded', 'invuln', 'dash_cd_s', 'pulse_cd_s', 'charm_s', 'flames', 'carried']) assert.ok(k in s.player, k);
+    for (const k of ['pos', 'vel', 'grounded', 'invuln', 'dash_cd_s', 'pulse_cd_s', 'charm_s', 'flames', 'carried', 'capacity']) assert.ok(k in s.player, k);
+    for (const l of s.lanterns) assert.deepEqual([l.fuel, l.ever_lit, l.relit_count], [0, false, 0]);
     for (const k of ['motes', 'drifters', 'charms', 'shades', 'lanterns']) assert.ok(Array.isArray(s[k]), k);
     for (const m of s.motes) assert.deepEqual(Object.keys(m).sort(), ['id', 'kind', 'pos', 'ttl_s']);
     assert.equal(s.lanterns.length, [0, 5, 6, 7][n]);

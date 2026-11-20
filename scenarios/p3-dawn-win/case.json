@@ -1,0 +1,25 @@
+{
+ "seed": 1,
+ "ticks": 200,
+ "why": "Đêm 1, 3/5 đèn sáng (= ceil(0.6x5)), time_left 1 s -> bình minh tick 60 -> won dawn_survived. Điểm 3x(50+floor(99)) + 3x50 = 597.",
+ "expect": {
+  "end": {
+   "state": "won",
+   "ticks": 60,
+   "score": 597
+  },
+  "event_names": [
+   "60:game_over"
+  ],
+  "events": [
+   {
+    "tick": 60,
+    "name": "game_over",
+    "data": {
+     "result": "won",
+     "reason": "dawn_survived"
+    }
+   }
+  ]
+ }
+}

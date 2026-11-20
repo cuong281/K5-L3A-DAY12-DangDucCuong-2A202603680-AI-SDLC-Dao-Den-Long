@@ -2,12 +2,12 @@
  "seed": 1,
  "night": 3,
  "ticks": 10,
- "why": "Thắng kể cả đúng tick hết giờ: time_left 1/60, thắp đèn cuối L7 ở bước 0 -> won (không phải dawn). Điểm 100+100+0+150=350.",
+ "why": "[P3 thay: thắng chỉ ở bình minh] Đêm 3: 5/7 đèn sáng (= ceil(0.6x7)), time_left 1/60 -> bình minh tick 1 -> won dawn_survived. Điểm 5x(50 + floor(100-1/60)=99) + 3x50 = 895.",
  "expect": {
   "end": {
    "state": "won",
    "ticks": 1,
-   "score": 350
+   "score": 895
   },
   "events": [
    {
@@ -15,7 +15,7 @@
     "name": "game_over",
     "data": {
      "result": "won",
-     "reason": "all_lit"
+     "reason": "dawn_survived"
     }
    }
   ]

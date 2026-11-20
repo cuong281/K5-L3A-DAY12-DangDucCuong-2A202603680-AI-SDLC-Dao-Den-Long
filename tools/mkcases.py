@@ -19,11 +19,6 @@ case("contract-example", {"seed": 1, "ticks": 400,
  "expect": {"events": [{"tick": 40, "name": "mote_picked", "data": {"carried": 1}}], "no_events": ["pulse"]}},
  {"player": {"pos": [0, 0, 0], "carried": 0, "flames": 3}, "random_motes": False, "random_shades": False, "motes": [[0, 0, 5]], "shades": [{"pos": [10, 0, 0]}], "lanterns": [{"id": "L1", "pos": [0, 0, 25], "deposited": 0}], "time_left_s": 300},
  {"frames": [{"tick": 0, "move": [0, 1], "cam_yaw_deg": 0}, {"tick": 120, "move": [0, 0], "interact": True}, {"tick": 121, "interact": False}, {"tick": 200, "pulse": True}, {"tick": 201, "pulse": False}]})
-case("win-all-lit", {"seed": 1, "ticks": 100,
- "why": "[P2 cập nhật: lantern_cost 10, điểm theo đom đóm nạp] L1-L4 sáng sẵn (không cộng điểm), đứng ở L5 chuẩn mang 10, nhấn E ở tick 0 -> thắng tick 1. Điểm = 10x10 + 100 + 2xfloor((18000-1)/60)=598 + 50x3 = 948.",
- "expect": {"end": {"state": "won", "ticks": 1, "score": 948}, "events": [{"tick": 1, "name": "deposit", "data": {"lantern_id": "L5", "amount": 10, "deposited": 10}}, {"tick": 1, "name": "game_over", "data": {"result": "won", "reason": "all_lit"}}]}},
- q(player={"pos": [-23.8, 0, 7.7], "carried": 10}, lanterns=[{"id": i, "lit": True} for i in ["L1", "L2", "L3", "L4"]]),
- {"frames": [{"tick": 0, "interact": True}]})
 case("lose-dawn", {"seed": 1, "ticks": 1000, "why": "Hết giờ (2 s = 120 tick) -> thua dawn ở tick 120, dừng sớm.",
  "expect": {"end": {"state": "lost", "ticks": 120, "score": 0}, "events": [{"tick": 120, "name": "game_over", "data": {"result": "lost", "reason": "dawn"}}]}},
  q(time_left_s=2))
@@ -35,10 +30,6 @@ case("safe-radius", {"seed": 1, "ticks": 1200, "snapshot_every": 600,
  "why": "[P2 cập nhật: shade ở 10 m để nó chase; vùng an toàn chặn đúng ở mép 6 m] Người chơi đứng tại đèn đã sáng. Bóng Mực bị chặn ở (6,0,0), không chạm được trong 20 s. Đèn đặt sẵn không cộng điểm.",
  "expect": {"end": {"state": "playing", "ticks": 1200, "score": 0}, "no_events": ["player_hit", "lantern_lit"], "snapshots": [{"tick": 600, "match": {"shades": [{"id": "S1", "pos": [6, 0, 0], "state": "chase"}], "player": {"flames": 3}}}]}},
  q(shades=[{"id": "S1", "pos": [10, 0, 0]}], lanterns=[{"id": "L1", "pos": [0, 0, 0], "lit": True}]))
-case("full-night-idle", {"seed": 7, "ticks": 18000, "snapshot_every": 600,
- "why": "[P2 cập nhật] Đêm 1 đầy đủ, sinh ngẫu nhiên, đứng yên ở tâm: Bóng Mực sinh ở bán kính 37 m, chỉ phát hiện trong 12 m nên không tới -> thua dawn ở tick 18000. Kiểm tra tất định và id tự sinh.",
- "expect": {"end": {"state": "lost", "ticks": 18000}, "events": [{"tick": 300, "name": "shade_spawned", "data": {"id": "S1"}}, {"tick": 300, "name": "shade_spawned", "data": {"id": "S2"}}, {"tick": 2220, "name": "shade_spawned", "data": {"id": "S6"}}, {"tick": 18000, "name": "game_over", "data": {"result": "lost", "reason": "dawn"}}]}})
-
 # ---- Phase 2: one or more per new feature ----
 case("p2-dash", {"seed": 1, "ticks": 120, "snapshot_every": 12,
  "why": "Lướt đứng yên -> theo hướng mặt +Z, 14 m/s x 12 tick = 2.8 m (tick 12); hồi chiêu còn 90-11=79 tick = 1.317 s. Nhấn lại ở tick 30: còn hồi chiêu -> bỏ qua. Hồi chiêu 90 tick tính từ lúc bắt đầu -> nhấn ở tick 90 được (sự kiện tick 91). Tổng 5.6 m.",
@@ -71,14 +62,6 @@ case("p2-drifter-pulse", {"seed": 1, "night": 2, "ticks": 250, "snapshot_every":
  "why": "Tỏa sáng trúng D1 (flee, đang mang 2) -> thả 2 đom đóm rơi tại chỗ, biến mất sau 120 tick (tick 121). Trúng D2 đang chase -> flee không cướp, biến mất sau 240 tick (tick 241).",
  "expect": {"events": [{"tick": 1, "name": "drifter_drop", "data": {"drifter_id": "D1", "amount": 2}}, {"tick": 1, "name": "pulse", "data": {"stunned_ids": []}}], "no_events": ["drifter_steal"], "snapshots": [{"tick": 1, "match": {"drifters": [{"id": "D1", "state": "flee", "stolen": 0}, {"id": "D2", "state": "flee", "stolen": 0}], "motes_active": 2}}, {"tick": 120, "match": {"drifters": [{"id": "D1", "state": "flee"}]}}, {"tick": 121, "match": {"drifters": [{"id": "D1", "state": "removed"}]}}, {"tick": 241, "match": {"drifters": [{"id": "D2", "state": "removed"}], "player": {"carried": 3}}}]}},
  q(player={"carried": 6}, drifters=[{"id": "D1", "pos": [2, 1.5, 0], "state": "flee", "stolen": 2}, {"id": "D2", "pos": [-3, 1.5, 0], "state": "chase"}]), {"frames": [{"tick": 0, "pulse": True}]})
-case("p2-pause", {"seed": 1, "ticks": 100, "snapshot_every": 10,
- "why": "Tạm dừng ở tick 10 tới tick 70: tick tăng nhưng sim_tick, thời gian, vị trí đứng yên; state paused. Tick 100: sim_tick 40, z = 4.0, time_left 300-40/60.",
- "expect": {"event_names": ["11:paused", "71:resumed"], "snapshots": [{"tick": 60, "match": {"state": "paused", "sim_tick": 10, "time_left_s": 299.833, "player": {"pos": [0, 0, 1]}}}, {"tick": 100, "match": {"state": "playing", "sim_tick": 40, "time_left_s": 299.333, "player": {"pos": [0, 0, 4]}}}]}},
- q(), {"frames": [{"tick": 0, "move": [0, 1]}, {"tick": 10, "pause": True}, {"tick": 11, "pause": False}, {"tick": 70, "pause": True}, {"tick": 71, "pause": False}]})
-case("p2-safe-expel", {"seed": 1, "ticks": 300, "snapshot_every": 30,
- "why": "Bóng Mực ở trong 6 m khi L1 vừa thắp -> bị đẩy ra mép trong 30 tick (tới (0,1,19) ở tick 30), không gây sát thương. Sau đó bị chặn ở mép. Điểm 10x10+100=200.",
- "expect": {"events": [{"tick": 1, "name": "deposit", "data": {"lantern_id": "L1", "amount": 10, "deposited": 10}}, {"tick": 1, "name": "lantern_lit", "data": {"lantern_id": "L1"}}], "no_events": ["player_hit"], "snapshots": [{"tick": 30, "match": {"shades": [{"id": "S1", "pos": [0, 1, 19]}], "score": 200}}, {"tick": 300, "match": {"player": {"flames": 3}}}]}},
- q(player={"pos": [0, 0, 23.5], "carried": 10}, shades=[{"id": "S1", "pos": [0, 1, 22]}]), {"frames": [{"tick": 0, "interact": True}]})
 case("p2-spawn-schedule", {"seed": 3, "ticks": 1500, "snapshot_every": 240,
  "why": "Đêm 1 mặc định: 20 đom đóm lúc đầu, +1 mỗi 240 tick tới hết 24 điểm (tick 960). Bóng Mực: 2 con tick 300 (S1,S2), +1 mỗi 480 tick (S3 tick 780, S4 tick 1260).",
  "expect": {"event_names": ["300:shade_spawned", "300:shade_spawned", "780:shade_spawned", "1260:shade_spawned"], "snapshots": [{"tick": 0, "match": {"motes_active": 20}}, {"tick": 240, "match": {"motes_active": 21}}, {"tick": 960, "match": {"motes_active": 24}}, {"tick": 1440, "match": {"motes_active": 24}}]}})
@@ -94,8 +77,63 @@ case("p2-night3-wind", {"seed": 5, "night": 3, "ticks": 2160, "snapshot_every": 
  "why": "Đêm 3: gió mỗi 30 s (tick 1800) kéo 5 s (tới tick 2100), hướng báo trước 2 s (tick 1680).",
  "expect": {"snapshots": [{"tick": 1620, "match": {"wind": {"active": False, "dir_deg": None}}}, {"tick": 1740, "match": {"wind": {"active": False}}}, {"tick": 1800, "match": {"wind": {"active": True}}}, {"tick": 2040, "match": {"wind": {"active": True}}}, {"tick": 2100, "match": {"wind": {"active": False}}}]}},
  q(wind_enabled=True))
+
+
+# ---- Phase 3 (Ticket-03): superseded cases re-defined + new cases ----
+case("win-all-lit", {"seed": 1, "ticks": 100,
+ "why": "[P3 cập nhật: không còn thắng sớm; +5/đom đóm] L1-L4 sáng sẵn, thắp L5 ở tick 1 -> vẫn playing tới tick 100. Điểm 10x5 + 100 = 150.",
+ "expect": {"end": {"state": "playing", "ticks": 100, "score": 150}, "events": [{"tick": 1, "name": "lantern_lit", "data": {"lantern_id": "L5", "relight": False}}], "no_events": ["game_over"]}},
+ q(player={"pos": [-23.8, 0, 7.7], "carried": 10}, lanterns=[{"id": i, "lit": True} for i in ["L1", "L2", "L3", "L4"]]),
+ {"frames": [{"tick": 0, "interact": True}]})
+case("full-night-idle", {"seed": 7, "ticks": 18000, "snapshot_every": 600,
+ "why": "[P3 cập nhật: Đêm 1 = 240 s] Đứng yên, không thắp đèn -> bình minh tick 14400 với 0 đèn < 3 -> thua dawn. Lịch sinh Bóng Mực không đổi.",
+ "expect": {"end": {"state": "lost", "ticks": 14400}, "events": [{"tick": 300, "name": "shade_spawned", "data": {"id": "S1"}}, {"tick": 2220, "name": "shade_spawned", "data": {"id": "S6"}}, {"tick": 14400, "name": "game_over", "data": {"result": "lost", "reason": "dawn"}}]}})
+case("p2-pause", {"seed": 1, "ticks": 100, "snapshot_every": 10,
+ "why": "[P3 cập nhật: Đêm 1 = 240 s] Tạm dừng tick 10-70: sim_tick, thời gian, vị trí đứng yên. Tick 100: sim_tick 40, z = 4.0, time_left 240-40/60.",
+ "expect": {"event_names": ["11:paused", "71:resumed"], "snapshots": [{"tick": 60, "match": {"state": "paused", "sim_tick": 10, "time_left_s": 239.833, "player": {"pos": [0, 0, 1]}}}, {"tick": 100, "match": {"state": "playing", "sim_tick": 40, "time_left_s": 239.333, "player": {"pos": [0, 0, 4]}}}]}},
+ q(), {"frames": [{"tick": 0, "move": [0, 1]}, {"tick": 10, "pause": True}, {"tick": 11, "pause": False}, {"tick": 70, "pause": True}, {"tick": 71, "pause": False}]})
+case("p2-safe-expel", {"seed": 1, "ticks": 300, "snapshot_every": 30,
+ "why": "[P3 cập nhật: +5/đom đóm] Bóng Mực trong 6 m khi L1 vừa thắp -> bị đẩy ra mép trong 30 tick ((0,1,19) ở tick 30), không sát thương. Điểm 10x5+100=150.",
+ "expect": {"events": [{"tick": 1, "name": "lantern_lit", "data": {"lantern_id": "L1", "relight": False}}], "no_events": ["player_hit"], "snapshots": [{"tick": 30, "match": {"shades": [{"id": "S1", "pos": [0, 1, 19]}], "score": 150}}, {"tick": 300, "match": {"player": {"flames": 3}}}]}},
+ q(player={"pos": [0, 0, 23.5], "carried": 10}, shades=[{"id": "S1", "pos": [0, 1, 22]}]), {"frames": [{"tick": 0, "interact": True}]})
 case("p2-night3-win-dawn-tick", {"seed": 1, "night": 3, "ticks": 10,
- "why": "Thắng kể cả đúng tick hết giờ: time_left 1/60, thắp đèn cuối L7 ở bước 0 -> won (không phải dawn). Điểm 100+100+0+150=350.",
- "expect": {"end": {"state": "won", "ticks": 1, "score": 350}, "events": [{"tick": 1, "name": "game_over", "data": {"result": "won", "reason": "all_lit"}}]}},
- q(player={"pos": [-20, 0, -34], "carried": 10}, lanterns=[{"id": f"L{i}", "lit": True} for i in range(1, 7)], time_left_s=1/60), {"frames": [{"tick": 0, "interact": True}]})
+ "why": "[P3 thay: thắng chỉ ở bình minh] Đêm 3: 5/7 đèn sáng (= ceil(0.6x7)), time_left 1/60 -> bình minh tick 1 -> won dawn_survived. Điểm 5x(50 + floor(100-1/60)=99) + 3x50 = 895.",
+ "expect": {"end": {"state": "won", "ticks": 1, "score": 895}, "events": [{"tick": 1, "name": "game_over", "data": {"result": "won", "reason": "dawn_survived"}}]}},
+ q(lanterns=[{"id": f"L{i}", "lit": True} for i in range(1, 6)], time_left_s=1/60))
+case("p3-fuel-out", {"seed": 1, "ticks": 200, "snapshot_every": 60,
+ "why": "L1 sáng với fuel 2 -> hao 1/s: tick 60 còn 1.0, tick 120 hết -> lantern_out, deposited 0, ever_lit true.",
+ "expect": {"event_names": ["120:lantern_out"], "snapshots": [{"tick": 60, "match": {"lanterns": [{"id": "L1", "lit": True, "fuel": 1}]}}, {"tick": 120, "match": {"lanterns": [{"id": "L1", "lit": False, "fuel": 0, "deposited": 0, "ever_lit": True}]}}]}},
+ q(lanterns=[{"id": "L1", "lit": True, "fuel": 2}]))
+case("p3-refuel", {"seed": 1, "ticks": 2, "snapshot_every": 1,
+ "why": "Châm dầu đèn đang sáng fuel 50, mang 7: bước 0 hao còn 49.983 -> used = min(7, ceil(50.017/10)=6) = 6 -> fuel 100 (kẹp), còn mang 1, +30 điểm.",
+ "expect": {"event_names": ["1:refuel"], "events": [{"tick": 1, "name": "refuel", "data": {"lantern_id": "L1", "amount": 6, "fuel": 100}}], "snapshots": [{"tick": 1, "match": {"score": 30, "player": {"carried": 1}}}]}},
+ q(player={"carried": 7}, lanterns=[{"id": "L1", "pos": [0, 0, 1], "lit": True, "fuel": 50}]), {"frames": [{"tick": 0, "interact": True}]})
+case("p3-relight", {"seed": 1, "ticks": 2, "snapshot_every": 1,
+ "why": "Đèn ever_lit đang tắt chỉ cần 5: mang 6 -> nạp 5, lantern_lit relight true, +5x5+40 = 65, relit_count 1, fuel 100, sức chứa 10+2x1 = 12.",
+ "expect": {"events": [{"tick": 1, "name": "lantern_lit", "data": {"lantern_id": "L1", "relight": True}}], "snapshots": [{"tick": 1, "match": {"score": 65, "player": {"carried": 1, "capacity": 12}, "lanterns": [{"id": "L1", "lit": True, "fuel": 100, "relit_count": 1}]}}]}},
+ q(player={"carried": 6}, lanterns=[{"id": "L1", "pos": [0, 0, 1], "ever_lit": True}]), {"frames": [{"tick": 0, "interact": True}]})
+case("p3-capacity", {"seed": 1, "ticks": 2, "snapshot_every": 1,
+ "why": "successful_lights 1 -> sức chứa 12: 13 đom đóm dưới chân chỉ nhặt được 12.",
+ "expect": {"snapshots": [{"tick": 1, "match": {"player": {"carried": 12, "capacity": 12}, "motes_active": 1}}]}},
+ q(player={"successful_lights": 1}, motes=[[0, 0, 0]] * 13))
+case("p3-drain", {"seed": 1, "ticks": 200, "snapshot_every": 1,
+ "why": "L1 fuel 29 (< 30 -> mất vùng an toàn). S1 wander cách 5.05 m đi tới với 4 m/s, tới <= 2 m sau 46 bước -> drain từ tick 46. fuel_drain mỗi 60 tick hút: tick 106, fuel = (1740 - 46 - 60x6)/60 = 22.2. Mây ở xa 30 m.",
+ "expect": {"snapshots": [{"tick": 45, "match": {"shades": [{"id": "S1", "state": "wander"}]}}, {"tick": 46, "match": {"shades": [{"id": "S1", "state": "drain"}]}}], "events": [{"tick": 106, "name": "fuel_drain", "data": {"lantern_id": "L1", "shade_id": "S1", "fuel": 22.2}}, {"tick": 166, "name": "fuel_drain", "data": {"lantern_id": "L1", "shade_id": "S1", "fuel": 16.2}}]}},
+ q(player={"pos": [0, 0, -30]}, lanterns=[{"id": "L1", "pos": [0, 0, 0], "lit": True, "fuel": 29}], shades=[{"id": "S1", "pos": [5.05, 1, 0], "state": "wander"}]))
+case("p3-drain-expel", {"seed": 1, "ticks": 200, "snapshot_every": 30,
+ "why": "S1 đang drain L1 (fuel 20). Mây châm 5 đom đóm: fuel lên >= 30 -> S1 về wander và bị đẩy ra mép 6 m trong 30 tick, không gây sát thương; sau đó bị vùng an toàn chặn.",
+ "expect": {"event_names": ["1:refuel"], "no_events": ["player_hit"], "snapshots": [{"tick": 30, "match": {"shades": [{"id": "S1", "pos": [0, 1, 6]}]}}, {"tick": 180, "match": {"player": {"flames": 3}}}]}},
+ q(player={"pos": [0, 0, -1.9], "carried": 5}, lanterns=[{"id": "L1", "pos": [0, 0, 0], "lit": True, "fuel": 20}], shades=[{"id": "S1", "pos": [0, 1, 2], "state": "drain", "target_lantern_id": "L1"}]), {"frames": [{"tick": 0, "interact": True}]})
+case("p3-dawn-win", {"seed": 1, "ticks": 200,
+ "why": "Đêm 1, 3/5 đèn sáng (= ceil(0.6x5)), time_left 1 s -> bình minh tick 60 -> won dawn_survived. Điểm 3x(50+floor(99)) + 3x50 = 597.",
+ "expect": {"end": {"state": "won", "ticks": 60, "score": 597}, "event_names": ["60:game_over"], "events": [{"tick": 60, "name": "game_over", "data": {"result": "won", "reason": "dawn_survived"}}]}},
+ q(lanterns=[{"id": i, "lit": True} for i in ["L1", "L2", "L3"]], time_left_s=1))
+case("p3-dawn-lose", {"seed": 1, "ticks": 200,
+ "why": "Chỉ 2/5 đèn sáng lúc bình minh (< 3) -> lost dawn, không thưởng.",
+ "expect": {"end": {"state": "lost", "ticks": 60, "score": 0}, "events": [{"tick": 60, "name": "game_over", "data": {"result": "lost", "reason": "dawn"}}]}},
+ q(lanterns=[{"id": i, "lit": True} for i in ["L1", "L2"]], time_left_s=1))
+case("p3-pulse-drain", {"seed": 1, "ticks": 3,
+ "why": "Tỏa Sáng trúng Bóng Mực đang drain -> +15 (thay vì +5).",
+ "expect": {"end": {"score": 15}, "events": [{"tick": 1, "name": "pulse", "data": {"stunned_ids": ["S1"]}}]}},
+ q(player={"pos": [2, 0, -6.5], "carried": 3}, lanterns=[{"id": "L1", "pos": [0, 0, 0], "lit": True, "fuel": 20}], shades=[{"id": "S1", "pos": [2, 1, -2], "state": "drain", "target_lantern_id": "L1"}]), {"frames": [{"tick": 0, "pulse": True}]})
 print("ok")

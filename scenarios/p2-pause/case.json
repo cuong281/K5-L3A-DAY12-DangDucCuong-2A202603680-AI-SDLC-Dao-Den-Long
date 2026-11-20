@@ -2,7 +2,7 @@
  "seed": 1,
  "ticks": 100,
  "snapshot_every": 10,
- "why": "Tạm dừng ở tick 10 tới tick 70: tick tăng nhưng sim_tick, thời gian, vị trí đứng yên; state paused. Tick 100: sim_tick 40, z = 4.0, time_left 300-40/60.",
+ "why": "[P3 cập nhật: Đêm 1 = 240 s] Tạm dừng tick 10-70: sim_tick, thời gian, vị trí đứng yên. Tick 100: sim_tick 40, z = 4.0, time_left 240-40/60.",
  "expect": {
   "event_names": [
    "11:paused",
@@ -14,7 +14,7 @@
     "match": {
      "state": "paused",
      "sim_tick": 10,
-     "time_left_s": 299.833,
+     "time_left_s": 239.833,
      "player": {
       "pos": [
        0,
@@ -29,7 +29,7 @@
     "match": {
      "state": "playing",
      "sim_tick": 40,
-     "time_left_s": 299.333,
+     "time_left_s": 239.333,
      "player": {
       "pos": [
        0,

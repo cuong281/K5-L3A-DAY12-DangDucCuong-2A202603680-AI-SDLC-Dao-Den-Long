@@ -1,0 +1,21 @@
+{
+ "seed": 1,
+ "ticks": 3,
+ "why": "Tỏa Sáng trúng Bóng Mực đang drain -> +15 (thay vì +5).",
+ "expect": {
+  "end": {
+   "score": 15
+  },
+  "events": [
+   {
+    "tick": 1,
+    "name": "pulse",
+    "data": {
+     "stunned_ids": [
+      "S1"
+     ]
+    }
+   }
+  ]
+ }
+}

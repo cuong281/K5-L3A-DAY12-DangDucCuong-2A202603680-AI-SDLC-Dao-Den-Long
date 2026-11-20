@@ -1,0 +1,33 @@
+{
+ "seed": 1,
+ "ticks": 2,
+ "snapshot_every": 1,
+ "why": "Châm dầu đèn đang sáng fuel 50, mang 7: bước 0 hao còn 49.983 -> used = min(7, ceil(50.017/10)=6) = 6 -> fuel 100 (kẹp), còn mang 1, +30 điểm.",
+ "expect": {
+  "event_names": [
+   "1:refuel"
+  ],
+  "events": [
+   {
+    "tick": 1,
+    "name": "refuel",
+    "data": {
+     "lantern_id": "L1",
+     "amount": 6,
+     "fuel": 100
+    }
+   }
+  ],
+  "snapshots": [
+   {
+    "tick": 1,
+    "match": {
+     "score": 30,
+     "player": {
+      "carried": 1
+     }
+    }
+   }
+  ]
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "seed": 1,
+ "ticks": 200,
+ "snapshot_every": 30,
+ "why": "S1 đang drain L1 (fuel 20). Mây châm 5 đom đóm: fuel lên >= 30 -> S1 về wander và bị đẩy ra mép 6 m trong 30 tick, không gây sát thương; sau đó bị vùng an toàn chặn.",
+ "expect": {
+  "event_names": [
+   "1:refuel"
+  ],
+  "no_events": [
+   "player_hit"
+  ],
+  "snapshots": [
+   {
+    "tick": 30,
+    "match": {
+     "shades": [
+      {
+       "id": "S1",
+       "pos": [
+        0,
+        1,
+        6
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "tick": 180,
+    "match": {
+     "player": {
+      "flames": 3
+     }
+    }
+   }
+  ]
+ }
+}

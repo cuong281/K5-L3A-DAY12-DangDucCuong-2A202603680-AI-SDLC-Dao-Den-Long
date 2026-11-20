@@ -1,31 +1,25 @@
 {
  "seed": 1,
  "ticks": 100,
- "why": "[P2 cập nhật: lantern_cost 10, điểm theo đom đóm nạp] L1-L4 sáng sẵn (không cộng điểm), đứng ở L5 chuẩn mang 10, nhấn E ở tick 0 -> thắng tick 1. Điểm = 10x10 + 100 + 2xfloor((18000-1)/60)=598 + 50x3 = 948.",
+ "why": "[P3 cập nhật: không còn thắng sớm; +5/đom đóm] L1-L4 sáng sẵn, thắp L5 ở tick 1 -> vẫn playing tới tick 100. Điểm 10x5 + 100 = 150.",
  "expect": {
   "end": {
-   "state": "won",
-   "ticks": 1,
-   "score": 948
+   "state": "playing",
+   "ticks": 100,
+   "score": 150
   },
   "events": [
    {
     "tick": 1,
-    "name": "deposit",
+    "name": "lantern_lit",
     "data": {
      "lantern_id": "L5",
-     "amount": 10,
-     "deposited": 10
-    }
-   },
-   {
-    "tick": 1,
-    "name": "game_over",
-    "data": {
-     "result": "won",
-     "reason": "all_lit"
+     "relight": false
     }
    }
+  ],
+  "no_events": [
+   "game_over"
   ]
  }
 }

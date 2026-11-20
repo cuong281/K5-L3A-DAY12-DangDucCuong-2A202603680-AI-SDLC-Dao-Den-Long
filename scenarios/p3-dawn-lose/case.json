@@ -1,0 +1,22 @@
+{
+ "seed": 1,
+ "ticks": 200,
+ "why": "Chỉ 2/5 đèn sáng lúc bình minh (< 3) -> lost dawn, không thưởng.",
+ "expect": {
+  "end": {
+   "state": "lost",
+   "ticks": 60,
+   "score": 0
+  },
+  "events": [
+   {
+    "tick": 60,
+    "name": "game_over",
+    "data": {
+     "result": "lost",
+     "reason": "dawn"
+    }
+   }
+  ]
+ }
+}

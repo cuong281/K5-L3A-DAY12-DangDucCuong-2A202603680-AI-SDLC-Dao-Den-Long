@@ -1,0 +1,52 @@
+{
+ "seed": 1,
+ "ticks": 200,
+ "snapshot_every": 1,
+ "why": "L1 fuel 29 (< 30 -> mất vùng an toàn). S1 wander cách 5.05 m đi tới với 4 m/s, tới <= 2 m sau 46 bước -> drain từ tick 46. fuel_drain mỗi 60 tick hút: tick 106, fuel = (1740 - 46 - 60x6)/60 = 22.2. Mây ở xa 30 m.",
+ "expect": {
+  "snapshots": [
+   {
+    "tick": 45,
+    "match": {
+     "shades": [
+      {
+       "id": "S1",
+       "state": "wander"
+      }
+     ]
+    }
+   },
+   {
+    "tick": 46,
+    "match": {
+     "shades": [
+      {
+       "id": "S1",
+       "state": "drain"
+      }
+     ]
+    }
+   }
+  ],
+  "events": [
+   {
+    "tick": 106,
+    "name": "fuel_drain",
+    "data": {
+     "lantern_id": "L1",
+     "shade_id": "S1",
+     "fuel": 22.2
+    }
+   },
+   {
+    "tick": 166,
+    "name": "fuel_drain",
+    "data": {
+     "lantern_id": "L1",
+     "shade_id": "S1",
+     "fuel": 16.2
+    }
+   }
+  ]
+ }
+}

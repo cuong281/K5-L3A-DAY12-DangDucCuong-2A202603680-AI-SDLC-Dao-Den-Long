@@ -81,6 +81,7 @@ export class Sfx {
   steal() { this.tone(700, 0.3, 'square', 0.04, 0, 0.5); }
   shade() { this.tone(98, 0.7, 'triangle', 0.08, 0, 0.7); }
   wind() { this.noise(1.6, 0.06, 500); }
+  out() { this.tone(330, 0.6, 'sine', 0.1, 0, 0.5); }
   tick() { this.tone(1200, 0.06, 'square', 0.04); }
   win() { [0, 2, 4, 5, 7, 9].forEach((k, j) => this.tone(PENTA[k], 1.2, 'sine', 0.1, j * 0.15)); }
   lose() { [4, 2, 0].forEach((k, j) => this.tone(PENTA[k] / 2, 0.8, 'triangle', 0.1, j * 0.25)); }

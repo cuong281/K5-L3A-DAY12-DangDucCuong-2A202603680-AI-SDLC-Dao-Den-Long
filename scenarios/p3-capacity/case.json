@@ -1,0 +1,20 @@
+{
+ "seed": 1,
+ "ticks": 2,
+ "snapshot_every": 1,
+ "why": "successful_lights 1 -> sức chứa 12: 13 đom đóm dưới chân chỉ nhặt được 12.",
+ "expect": {
+  "snapshots": [
+   {
+    "tick": 1,
+    "match": {
+     "player": {
+      "carried": 12,
+      "capacity": 12
+     },
+     "motes_active": 1
+    }
+   }
+  ]
+ }
+}

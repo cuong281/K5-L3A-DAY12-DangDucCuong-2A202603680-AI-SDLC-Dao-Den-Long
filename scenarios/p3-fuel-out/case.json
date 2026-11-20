@@ -1,0 +1,39 @@
+{
+ "seed": 1,
+ "ticks": 200,
+ "snapshot_every": 60,
+ "why": "L1 sáng với fuel 2 -> hao 1/s: tick 60 còn 1.0, tick 120 hết -> lantern_out, deposited 0, ever_lit true.",
+ "expect": {
+  "event_names": [
+   "120:lantern_out"
+  ],
+  "snapshots": [
+   {
+    "tick": 60,
+    "match": {
+     "lanterns": [
+      {
+       "id": "L1",
+       "lit": true,
+       "fuel": 1
+      }
+     ]
+    }
+   },
+   {
+    "tick": 120,
+    "match": {
+     "lanterns": [
+      {
+       "id": "L1",
+       "lit": false,
+       "fuel": 0,
+       "deposited": 0,
+       "ever_lit": true
+      }
+     ]
+    }
+   }
+  ]
+ }
+}
