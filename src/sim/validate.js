@@ -1,8 +1,11 @@
-// Validation for headless inputs/scenario files. Returns an error string or null.
+// Validation for headless inputs/scenario files (Test Contract v1.1). Returns an error string or null.
 const isObj = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 const isNum = (v) => typeof v === 'number' && Number.isFinite(v);
 const isVec3 = (v) => Array.isArray(v) && v.length === 3 && v.every(isNum);
-const isVec3or2 = (v) => Array.isArray(v) && (v.length === 3 || v.length === 2) && v.every(isNum);
+const isNat = (v) => Number.isInteger(v) && v >= 0;
+const BUTTONS = ['jump', 'interact', 'pulse', 'dash', 'pause'];
+const SHADE_STATES = ['spawning', 'wander', 'chase', 'recoil', 'stunned'];
+const DRIFTER_STATES = ['idle', 'chase', 'flee', 'removed'];
 
 export function validateInputs(inp) {
   if (!isObj(inp)) return 'root must be an object';
@@ -12,7 +15,7 @@ export function validateInputs(inp) {
     const f = inp.frames[i];
     const at = `frames[${i}]`;
     if (!isObj(f)) return `${at} must be an object`;
-    if (!Number.isInteger(f.tick) || f.tick < 0) return `${at}.tick must be a non-negative integer`;
+    if (!isNat(f.tick)) return `${at}.tick must be a non-negative integer`;
     if (f.tick <= last) return `${at}.tick must be strictly increasing`;
     last = f.tick;
     if (f.move !== undefined) {
@@ -20,9 +23,7 @@ export function validateInputs(inp) {
       if (f.move.some((c) => c < -1 || c > 1)) return `${at}.move components must be in [-1, 1]`;
     }
     if (f.cam_yaw_deg !== undefined && !isNum(f.cam_yaw_deg)) return `${at}.cam_yaw_deg must be a number`;
-    for (const b of ['jump', 'interact', 'pulse', 'dash']) {
-      if (f[b] !== undefined && typeof f[b] !== 'boolean') return `${at}.${b} must be boolean`;
-    }
+    for (const b of BUTTONS) if (f[b] !== undefined && typeof f[b] !== 'boolean') return `${at}.${b} must be boolean`;
   }
   return null;
 }
@@ -33,31 +34,46 @@ export function validateScenario(sc) {
     const p = sc.player;
     if (!isObj(p)) return 'player must be an object';
     if (p.pos !== undefined && !isVec3(p.pos)) return 'player.pos must be [x, y, z]';
-    if (p.carried !== undefined && !(Number.isInteger(p.carried) && p.carried >= 0)) return 'player.carried must be a non-negative integer';
-    if (p.flames !== undefined && !(Number.isInteger(p.flames) && p.flames >= 0)) return 'player.flames must be a non-negative integer';
+    for (const k of ['carried', 'flames', 'invuln_ticks', 'dash_cd_ticks', 'pulse_cd_ticks', 'charm_ticks']) {
+      if (p[k] !== undefined && !isNat(p[k])) return `player.${k} must be a non-negative integer`;
+    }
   }
-  for (const f of ['random_motes', 'random_shades']) {
+  for (const f of ['random_motes', 'random_shades', 'random_drifters', 'wind_enabled']) {
     if (sc[f] !== undefined && typeof sc[f] !== 'boolean') return `${f} must be boolean`;
   }
   if (sc.motes !== undefined) {
     if (!Array.isArray(sc.motes)) return 'motes must be an array';
-    for (const m of sc.motes) if (!isVec3or2(m) || m.length !== 3) return 'each mote must be [x, y, z]';
-  }
-  if (sc.shades !== undefined) {
-    if (!Array.isArray(sc.shades)) return 'shades must be an array';
-    for (const s of sc.shades) {
-      if (!isObj(s) || !isVec3(s.pos)) return 'each shade must be {"pos": [x, y, z]}';
-      if (s.id !== undefined && typeof s.id !== 'string') return 'shade id must be a string';
+    for (const m of sc.motes) {
+      if (isVec3(m)) continue;
+      if (!isObj(m) || !isVec3(m.pos)) return 'each mote must be [x, y, z] or {"pos": [x, y, z]}';
+      if (m.kind !== undefined && m.kind !== 'random' && m.kind !== 'dropped') return 'mote kind must be random or dropped';
     }
-    const ids = sc.shades.filter((s) => s.id).map((s) => s.id);
-    if (new Set(ids).size !== ids.length) return 'shade ids must be unique';
   }
+  const checkList = (name, arr, states, extra) => {
+    if (arr === undefined) return null;
+    if (!Array.isArray(arr)) return `${name} must be an array`;
+    for (const e of arr) {
+      if (!isObj(e) || !isVec3(e.pos)) return `each ${name} entry must be {"pos": [x, y, z]}`;
+      if (e.id !== undefined && typeof e.id !== 'string') return `${name} id must be a string`;
+      if (e.state !== undefined && !states.includes(e.state)) return `${name} state must be one of ${states.join(', ')}`;
+      const err = extra(e);
+      if (err) return err;
+    }
+    const ids = arr.filter((e) => e.id).map((e) => e.id);
+    if (new Set(ids).size !== ids.length) return `${name} ids must be unique`;
+    return null;
+  };
+  let err =
+    checkList('shades', sc.shades, SHADE_STATES, (s) => (s.state_ticks_left !== undefined && !isNat(s.state_ticks_left) ? 'state_ticks_left must be a non-negative integer' : null)) ||
+    checkList('drifters', sc.drifters, DRIFTER_STATES, (d) => (d.stolen !== undefined && !isNat(d.stolen) ? 'drifter stolen must be a non-negative integer' : null)) ||
+    checkList('charms', sc.charms, [], (c) => (c.available !== undefined && typeof c.available !== 'boolean' ? 'charm available must be boolean' : null));
+  if (err) return err;
   if (sc.lanterns !== undefined) {
     if (!Array.isArray(sc.lanterns)) return 'lanterns must be an array';
     for (const l of sc.lanterns) {
       if (!isObj(l) || typeof l.id !== 'string') return 'each lantern needs a string id';
       if (l.pos !== undefined && !isVec3(l.pos)) return `lantern ${l.id} pos must be [x, y, z]`;
-      if (l.deposited !== undefined && !(Number.isInteger(l.deposited) && l.deposited >= 0)) return `lantern ${l.id} deposited must be a non-negative integer`;
+      if (l.deposited !== undefined && !isNat(l.deposited)) return `lantern ${l.id} deposited must be a non-negative integer`;
       if (l.lit !== undefined && typeof l.lit !== 'boolean') return `lantern ${l.id} lit must be boolean`;
     }
   }
