@@ -423,7 +423,10 @@ function frame(now) {
     acc += dt;
     while (acc >= DT && game.state === 'playing') {
       game.applyFrame(readFrame());
+      const wasGrounded = game.player.grounded;
       handleEvents(game.step());
+      const P = game.player;
+      if (wasGrounded && !P.grounded && P.vel[1] > 0) P.launched ? sfx.charm() : sfx.jump(); // jump / launch pad
       acc -= DT;
     }
     if (game.state !== 'playing') showResult();

@@ -2,18 +2,22 @@
 
 > Video demo: *(sẽ bổ sung ở Phase 4)* · Tài liệu lab gốc: [docs/lab/README.md](docs/lab/README.md)
 
-Game 3D góc nhìn thứ ba. **Mây**, người giữ đèn nhỏ tuổi đội nón lá, gom đom đóm để thắp lại 5 Đèn Lồng Lớn của Đảo Bến trước khi trời sáng, đồng thời tránh **Bóng Mực** trong sương đen.
-Có chế độ headless tất định theo Test Contract v1.0 để chấm tự động.
+Game 3D góc nhìn thứ ba. **Mây**, người giữ đèn nhỏ tuổi đội nón lá, gom đom đóm để thắp lại Đèn Lồng Lớn qua **ba đêm**: Đảo Bến, Đảo Cau và Đảo Chuông, đồng thời tránh **Bóng Mực** và **Gió Lạc** trong sương đen.
+Game có chế độ headless tất định theo **Test Contract v1.1** để chấm tự động.
 
 ## Cài đặt và chạy (macOS / Linux / Windows, cần Node ≥ 18)
 
 ```bash
 npm install          # build_cmd
 npm run dev          # mở game trên trình duyệt: http://localhost:5173
-node headless.js --seed 1 --night 1 --ticks 600 --out out/run.jsonl   # headless
+node headless.js --seed 1 --night 1 --ticks 600 --out out/run.jsonl   # headless (--night 1|2|3)
 ```
 
-Kiểm thử: `npm test` (unit + CLI) và `npm run proof` (chạy các scenario 2 lần, so tất định, ghi vào `docs/proof/`).
+Kiểm thử:
+- `npm test`: unit test và test CLI.
+- `npm run proof -- phase-2`: chạy 21 case headless, mỗi case 2 lần để kiểm tra tất định.
+- `npm run bench`: đo FPS, cần chạy `npx vite build && npx vite preview --port 4173` trước.
+
 Bản tĩnh: `npx vite build`, kết quả nằm trong `dist/`.
 
 ## Điều khiển
@@ -21,51 +25,61 @@ Bản tĩnh: `npx vite build`, kết quả nằm trong `dist/`.
 | Phím | Hành động |
 |---|---|
 | `W A S D` / `↑ ↓` | Đi (theo hướng camera) |
-| Kéo chuột, `Q` / `C`, `← →` | Xoay camera |
+| Kéo chuột, `Q` / `C`, `← →` | Xoay camera (chỉnh độ nhạy trong Cài đặt) |
 | `Space` | Nhảy |
-| `E` | Nạp đom đóm vào đèn gần nhất |
-| `F` | Tỏa sáng: xua Bóng Mực gần (tốn 1 đom đóm, hồi 2 s) |
-| `Enter` / `R` | Bắt đầu / chơi lại |
+| `Shift` | Lướt (14 m/s trong 0.2 s, hồi chiêu 1.5 s) |
+| `E` | Nạp ánh sáng vào đèn gần nhất |
+| `F` | Tỏa Sáng: tốn 3 đom đóm, làm choáng và đẩy lùi Bóng Mực trong 5 m |
+| `Esc` / `P` | Tạm dừng: Tiếp tục / Chơi lại Đêm / Cài đặt / Về menu |
+| `Enter` / `R` | Bắt đầu, sang Đêm kế tiếp / chơi lại Đêm vừa thua |
 
-## Luật và cách tính điểm
+## Luật chính (số chuẩn Ticket-02)
 
-- Mang tối đa **10** đom đóm. Mỗi đèn cần **5** đom đóm để thắp. Đứng trong 2.5 m rồi nhấn `E`.
-- Bóng Mực đuổi theo với tốc độ 3.5 m/s (Mây chạy 6 m/s). Bị chạm thì mất 1/3 ngọn lửa, rơi một nửa số đom đóm và được bất tử 1.5 s.
-- Tỏa sáng làm choáng Bóng Mực trong 6 m suốt 3 s và đẩy chúng lùi 4 m. Bóng Mực không vào được vòng 6 m quanh đèn **đã thắp**.
-- **Thắng** khi thắp đủ 5 đèn. **Thua** khi hết lửa hoặc khi trời sáng (sau 5 phút).
+- Mang tối đa **10** đom đóm, nhặt tự động trong 1 m. Mỗi đèn cần **10** đom đóm, có thể nạp nhiều lần (đứng trong 2 m rồi nhấn `E`).
+- **Bóng Mực** phát hiện Mây trong 12 m và bỏ đuổi khi xa quá 18 m (tốc độ 4 m/s, Đêm 3 là 4.5 m/s).
+  - Bị chạm: mất 1 Ngọn Lửa, rơi một nửa số đom đóm ra quanh Mây, sau đó bất tử 1.5 s.
+  - Bóng Mực không vào được vòng 6 m quanh đèn đã sáng.
+- **Gió Lạc** (Đêm 2–3) cướp 3 đom đóm khi Mây mang từ 5 con trở lên. Tỏa Sáng trúng nó lúc đang chạy trốn sẽ lấy lại số đom đóm bị cướp.
+- **Bùa Gió** (lá bùa đỏ): trong 10 s chạy 7.2 m/s và lướt không cần hồi chiêu.
+- **Rơi khỏi đảo**: mất 1 Ngọn Lửa và toàn bộ đom đóm, hồi sinh ở điểm xuất phát.
+- **Thắng** khi thắp hết đèn của Đêm. **Thua** khi hết 3 Ngọn Lửa hoặc trời sáng (5 phút 00 / 5 phút 30 / 6 phút 00). Thắng Đêm 3 thì tới màn Bình Minh.
 
 | Sự kiện | Điểm |
 |---|---|
-| Nhặt 1 đom đóm | +10 |
+| Mỗi đom đóm **nạp** vào đèn | +10 |
 | Thắp 1 đèn | +100 |
-| Mỗi Bóng Mực bị choáng | +25 |
+| Mỗi Bóng Mực trúng Tỏa Sáng | +5 |
 | Khi thắng: mỗi giây còn lại | +2 |
-| Khi thắng: mỗi ngọn lửa còn lại | +50 |
+| Khi thắng: mỗi Ngọn Lửa còn lại | +50 |
+
+Tổng điểm game là tổng điểm của các Đêm đã thắng.
 
 ## Test Contract
 
-- [game.contract.json](game.contract.json) ghi đúng các số mà game dùng. Logic trong `src/sim/` đọc trực tiếp từ file này.
-- `fall_enabled: false`: đảo có tường vô hình ở bán kính 40 m, không có sự kiện rơi. Không có `dash`.
-- Trạng thái Bóng Mực: `chase`, `stunned`. Snapshot có thêm mảng `motes` (id, pos).
-- Các giả định chi tiết nằm trong [docs/notes/phase-1.md](docs/notes/phase-1.md).
+- [game.contract.json](game.contract.json) (v1.1) ghi đúng số chuẩn. Logic trong `src/sim/` đọc trực tiếp từ file này.
+- Bản đồ chuẩn nằm trong [src/sim/maps.js](src/sim/maps.js). Mỗi tick chạy đủ 12 bước theo thứ tự trong `Game.step()`.
+- Snapshot có thêm mảng `motes` (id, pos, kind, ttl_s), `drifters` và `charms`. `player.invuln` là boolean, kèm `invuln_s`.
+- Giả định cho các chỗ ticket còn mơ hồ (xuất phát Đêm 3 ở (0,0,−16), thời lượng `spawning`…) nằm trong [docs/notes/phase-2.md](docs/notes/phase-2.md).
 
 ## Sáng tạo của tôi
 
 Mọi phần thêm đều **chỉ ở renderer** (`src/web/`), không chạm vào `src/sim/`, nên đầu ra headless không đổi.
 
-- **Đèn trời:** mỗi khi một Đèn Lồng Lớn được thắp, 6 chiếc đèn trời nhỏ bay lên từ chân đèn.
-- **Chuông ngũ cung:** âm thanh tạo bằng WebAudio, không dùng file. Nhặt đom đóm cho nốt cao dần theo số đang mang; thắp đèn cho hợp âm; bị chạm cho tiếng trầm.
-- **Đảo bừng sáng:** nền trời chuyển từ tím đen sang tím ấm, sương mỏng dần, ánh sáng tăng theo số đèn đã thắp. Vòng sáng quanh đèn cho thấy vùng an toàn.
+- **Đèn trời:** mỗi khi một Đèn Lồng Lớn được thắp, 6 chiếc đèn trời nhỏ bay lên.
+- **Chuông ngũ cung:** toàn bộ âm thanh và nhạc nền được tạo bằng WebAudio, không dùng file. Nhặt đom đóm cho nốt cao dần theo số đang mang; thắp đèn cho hợp âm.
+- **Ông Đăng:** mỗi Đêm mở đầu bằng một lời dặn riêng của ông.
+- **Lá bay báo gió:** 2 s trước mỗi cơn gió ở Đêm 3, lá bay theo đúng hướng gió sắp thổi.
 
-Bằng chứng phần cũ vẫn đúng: `npm test` (28/28) và `npm run proof` (6/6 case, chạy 2 lần giống hệt nhau) đều đạt sau khi thêm. Xem [docs/proof/phase-1/](docs/proof/phase-1/README.md) và ảnh [web-lit3.png](docs/proof/phase-1/web-lit3.png).
+Bằng chứng phần cũ vẫn đúng: `npm test` (39/39) và `npm run proof -- phase-2` (21/21 case, 2 lần chạy giống hệt nhau) đều đạt. Xem [docs/proof/phase-2/](docs/proof/phase-2/README.md).
 
 ## Cấu trúc
 
 ```text
 game.contract.json   headless.js   index.html
-src/sim/     logic thuần (dùng chung cho headless và web)
-src/web/     renderer Three.js, HUD, âm thanh
+src/sim/     logic thuần: sim.js, maps.js, rng.js, validate.js (dùng chung cho headless và web)
+src/web/     main.js (luồng game, HUD), world.js (địa hình, bảng màu), sfx.js (âm thanh)
 tests/       unit + CLI tests          scenarios/  case headless kèm kỳ vọng tính tay
-tools/       proof.js                  docs/notes  giả định, nhật ký AI   docs/proof  bằng chứng
-AGENTS.md, CLAUDE.md, .claude/ (hook, skill), .github/workflows/  harness AI và CI
+tools/       proof.js, mkcases.py, bench.js
+docs/notes/  giả định, spec, nhật ký AI theo phase     docs/proof/  bằng chứng theo phase
+AGENTS.md, CLAUDE.md, .claude/ (Stop hook, skill verify-headless), .github/workflows/  harness AI và CI
 ```

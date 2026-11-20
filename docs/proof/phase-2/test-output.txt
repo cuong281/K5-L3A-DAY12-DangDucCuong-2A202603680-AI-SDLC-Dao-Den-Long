@@ -1,0 +1,43 @@
+# npm test — 2026-11-20T10:42:44Z — v22.13.1
+ok 1 - snapshots every N from tick 0, end line last, exit 0
+ok 2 - default snapshot-every is 10
+ok 3 - contract example: deterministic and byte-identical across runs
+ok 4 - full random nights 1-3 are deterministic for the same seed
+ok 5 - v1.1 snapshot shape + night_start event at tick 0
+ok 6 - --night outside 1..3 -> non-zero exit
+ok 7 - pause: tick advances, sim_tick and time frozen, state paused
+ok 8 - game over stops the run early with end line
+ok 9 - coordinates rounded to 3 decimals
+ok 10 - malformed inputs / scenario -> exit code 2 with stderr message
+ok 11 - missing required args -> non-zero exit
+ok 12 - contract tuning matches Ticket-02 standard numbers
+ok 13 - standard maps: lantern counts/positions, spawn point counts
+ok 14 - night start: 20 random motes at distinct points, no shades before tick 300
+ok 15 - move 60 ticks = player_speed metres; yaw rotates; diagonal normalized
+ok 16 - jump only when grounded; returns to ground
+ok 17 - dash: 14 m/s for 12 ticks in facing dir, cooldown 90 ticks from start
+ok 18 - dash in the air keeps altitude
+ok 19 - pickup: XZ <= 1.0 and height diff <= 1.5; no score until deposit
+ok 20 - deposit: min(carried, missing), +10 per mote, lantern remembers progress
+ok 21 - interact picks nearest unlit lantern, tie -> smaller id
+ok 22 - pulse: needs 3, 3D radius 5 from foot+0.8, stun 120, push 4 m over 15 ticks, +5 each
+ok 23 - pulse cooldown 3 s; re-pulse refreshes stun and scores again
+ok 24 - shade detects at 12 m, gives up beyond 18 m
+ok 25 - shade hit: -1 flame, drop floor(carried/2) as dropped motes 1.5-2.5 m (ttl 480), invuln 90, recoil 2 m / 60 ticks
+ok 26 - dropped motes expire after 480 ticks
+ok 27 - fall off island: once, ignores invuln, -1 flame, lose all motes, wait 60, respawn with invuln 90
+ok 28 - launch pads: night 2 crosses to the other island in 84 ticks; night 3 lands on tier 2
+ok 29 - night 3 terrain: ramp climbs to tier 1, cliffs block, tower blocks
+ok 30 - safe zone: shades blocked at 6 m edge; shades inside when lit are expelled within 30 ticks without damage
+ok 31 - drifter: chases when carried >= 5 within 15 m, steals min(3, carried) ignoring invuln, flees 240 ticks then removed
+ok 32 - pulse on drifters: chase -> flee without stealing; flee with loot -> drops it as dropped motes
+ok 33 - charm: pickup sets 600 ticks, speed 7.2, dash without cooldown, respawns after 2700
+ok 34 - pause freezes sim: tick advances, sim_tick/time do not; paused/resumed events
+ok 35 - mote spawns every 240 ticks up to free points; shades 2 at tick 300 then every 480 up to 6
+ok 36 - win even on the exact dawn tick
+ok 37 - dawn ends the night
+ok 38 - night 3 wind: gust every 30 s for 5 s at 2 m/s
+ok 39 - determinism per seed for every night, ids included
+# tests 39
+# pass 39
+# fail 0
