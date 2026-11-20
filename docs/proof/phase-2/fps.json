@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-20T10:42:20.245Z",
+  "cpu": "AMD Ryzen 5 5600H with Radeon Graphics         ",
+  "platform": "win32 10.0.26300",
+  "seconds": 10,
+  "results": [
+    {
+      "night": 1,
+      "fps": 114.8,
+      "gpu": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001638) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "night": 2,
+      "fps": 118.4,
+      "gpu": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001638) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "night": 3,
+      "fps": 118.9,
+      "gpu": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001638) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    }
+  ],
+  "pass": true
+}

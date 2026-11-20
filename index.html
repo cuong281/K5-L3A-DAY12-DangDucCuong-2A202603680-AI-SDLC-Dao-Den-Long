@@ -5,24 +5,54 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Đảo Đèn Lồng</title>
   <style>
-    html, body { margin: 0; height: 100%; overflow: hidden; background: #0b0614; font-family: system-ui, sans-serif; color: #ffe9c4; }
+    :root { --text: #F5F1E6; --gold: #F2C14E; --danger: #FF5A5F; --lit: #FFB347; --panel: rgba(14, 20, 48, .72); }
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #0E1430; font-family: system-ui, "Segoe UI", sans-serif; color: var(--text); user-select: none; }
     canvas { display: block; }
-    #hud { position: fixed; top: 12px; left: 12px; background: rgba(20, 8, 30, .55); padding: 10px 14px; border-radius: 10px; font-size: 15px; line-height: 1.6; pointer-events: none; min-width: 210px; }
-    #hud b { color: #ffb347; }
-    #hint { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: rgba(20, 8, 30, .6); padding: 8px 16px; border-radius: 8px; pointer-events: none; display: none; }
-    #overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(8, 3, 16, .78); }
-    #overlay .card { max-width: 560px; padding: 28px 32px; background: rgba(40, 18, 50, .92); border: 1px solid #ffb34766; border-radius: 14px; text-align: center; }
-    #overlay h1 { margin: 0 0 8px; color: #ffb347; letter-spacing: 1px; }
-    #overlay p { line-height: 1.55; }
-    #overlay kbd { background: #2a1838; border: 1px solid #ffb34766; border-radius: 4px; padding: 1px 6px; }
-    .bar { height: 6px; background: #3a2448; border-radius: 3px; overflow: hidden; margin-top: 4px; }
-    .bar > div { height: 100%; background: #ffb347; }
+    .hud { position: fixed; pointer-events: none; text-shadow: 0 1px 3px #000a; }
+    #flames { top: 14px; left: 16px; display: flex; gap: 8px; }
+    .flame { width: 22px; height: 30px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: radial-gradient(circle at 50% 70%, #FFE9B0, var(--lit) 60%, #c2621a); box-shadow: 0 0 12px var(--lit); }
+    .flame.off { background: #5B5F6E; box-shadow: none; opacity: .5; }
+    #timer { top: 10px; left: 50%; transform: translateX(-50%); font-size: 30px; font-weight: 700; letter-spacing: 1px; background: var(--panel); padding: 2px 16px; border-radius: 10px; }
+    #timer.danger { color: var(--danger); animation: blink .6s steps(2) infinite; }
+    @keyframes blink { 50% { opacity: .35; } }
+    #topright { top: 12px; right: 16px; text-align: right; font-size: 18px; background: var(--panel); padding: 6px 12px; border-radius: 10px; line-height: 1.5; }
+    #topright b { color: var(--gold); }
+    #motebar { bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; background: var(--panel); padding: 7px 9px; border-radius: 10px; }
+    .cell { width: 18px; height: 18px; border-radius: 50%; border: 1px solid #FFE58A55; }
+    .cell.on { background: radial-gradient(circle, #FFF6C2, #FFE58A 70%); box-shadow: 0 0 8px #FFE58A; }
+    #cds { bottom: 16px; right: 18px; display: flex; gap: 12px; }
+    .cd { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; text-align: center; line-height: 1.1; border: 2px solid var(--gold); }
+    #prompt { bottom: 70px; left: 50%; transform: translateX(-50%); background: var(--panel); padding: 7px 16px; border-radius: 8px; font-size: 17px; display: none; }
+    #prompt b { color: var(--gold); }
+    #arrow { width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-bottom: 30px solid var(--lit); filter: drop-shadow(0 0 6px var(--lit)); display: none; }
+    #status { top: 56px; left: 16px; font-size: 14px; line-height: 1.6; }
+    #status .charm { color: #ff8a9a; }
+    #status .wind { color: #cfe3ff; }
+    #fps { bottom: 4px; left: 6px; font-size: 11px; opacity: .6; }
+    #overlay { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(14, 20, 48, .82); }
+    #card { max-width: 600px; padding: 28px 34px; background: rgba(27, 35, 80, .95); border: 1px solid #F2C14E66; border-radius: 14px; text-align: center; }
+    #card h1 { margin: 0 0 6px; color: var(--lit); letter-spacing: 1px; }
+    #card h2 { margin: 0 0 10px; color: var(--gold); font-weight: 600; }
+    #card p { line-height: 1.6; }
+    #card .quote { font-style: italic; color: #FFE9B0; }
+    #card kbd { background: #0E1430; border: 1px solid #F2C14E66; border-radius: 4px; padding: 1px 6px; }
+    #card button { display: block; width: 260px; margin: 8px auto; padding: 10px; font-size: 16px; color: var(--text); background: #0E1430; border: 1px solid var(--gold); border-radius: 8px; cursor: pointer; }
+    #card button:hover, #card button:focus { background: #2a3570; outline: none; }
+    #card label { display: block; margin: 14px 0 4px; }
+    #card input[type=range] { width: 260px; }
   </style>
 </head>
 <body>
-  <div id="hud"></div>
-  <div id="hint"></div>
-  <div id="overlay"><div class="card" id="card"></div></div>
+  <div id="flames" class="hud"></div>
+  <div id="status" class="hud"></div>
+  <div id="timer" class="hud"></div>
+  <div id="topright" class="hud"></div>
+  <div id="motebar" class="hud"></div>
+  <div id="cds" class="hud"><div class="cd" id="cd-dash"></div><div class="cd" id="cd-pulse"></div></div>
+  <div id="prompt" class="hud"></div>
+  <div id="arrow" class="hud"></div>
+  <div id="fps" class="hud"></div>
+  <div id="overlay"><div id="card"></div></div>
   <script type="module" src="/src/web/main.js"></script>
 </body>
 </html>
