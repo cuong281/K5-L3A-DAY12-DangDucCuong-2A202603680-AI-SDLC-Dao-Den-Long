@@ -42,21 +42,28 @@ Bản tĩnh: `npx vite build`, kết quả nằm trong `dist/`.
 - **Gió Lạc** (Đêm 2–3) cướp 3 đom đóm khi Mây mang từ 5 con trở lên. Tỏa Sáng trúng nó lúc đang chạy trốn sẽ lấy lại số đom đóm bị cướp.
 - **Bùa Gió** (lá bùa đỏ): trong 10 s chạy 7.2 m/s và lướt không cần hồi chiêu.
 - **Rơi khỏi đảo**: mất 1 Ngọn Lửa và toàn bộ đom đóm, hồi sinh ở điểm xuất phát.
-- **Thắng** khi thắp hết đèn của Đêm. **Thua** khi hết 3 Ngọn Lửa hoặc trời sáng (5 phút 00 / 5 phút 30 / 6 phút 00). Thắng Đêm 3 thì tới màn Bình Minh.
+- **Đèn cạn dầu** (Phase 3):
+  - Đèn vừa thắp có 100 dầu và hao 1 dầu/s. Nhấn `E` ở đèn đang sáng để châm thêm, mỗi đom đóm cho 10 dầu.
+  - Hết dầu thì đèn tắt. Đèn đã từng sáng chỉ cần 5 đom đóm để thắp lại.
+  - Đèn dưới 30 dầu mất vùng an toàn: Bóng Mực sẽ tới hút dầu với tốc độ 5/s.
+- **Sức chứa** tăng 2 sau mỗi lần thắp thành công, tối đa 20.
+- **Thắng** khi còn sống lúc bình minh và đang có ít nhất 3/5, 4/6 hoặc 5/7 đèn sáng (thời lượng 4:00 / 4:30 / 5:00). **Thua** khi hết 3 Ngọn Lửa, hoặc bình minh tới mà chưa đủ đèn sáng. Thắng Đêm 3 thì tới màn Bình Minh.
 
 | Sự kiện | Điểm |
 |---|---|
-| Mỗi đom đóm **nạp** vào đèn | +10 |
-| Thắp 1 đèn | +100 |
-| Mỗi Bóng Mực trúng Tỏa Sáng | +5 |
-| Khi thắng: mỗi giây còn lại | +2 |
-| Khi thắng: mỗi Ngọn Lửa còn lại | +50 |
+| Mỗi đom đóm nạp vào đèn (thắp, thắp lại, châm dầu) | +5 |
+| Thắp lần đầu / thắp lại | +100 / +40 |
+| Mỗi Bóng Mực trúng Tỏa Sáng (đang hút dầu) | +5 (+15) |
+| Bình minh (khi thắng): mỗi đèn đang sáng | +50 + floor(dầu) |
+| Bình minh (khi thắng): mỗi Ngọn Lửa còn lại | +50 |
 
 Tổng điểm game là tổng điểm của các Đêm đã thắng.
 
 ## Test Contract
 
-- [game.contract.json](game.contract.json) (v1.1) ghi đúng số chuẩn. Logic trong `src/sim/` đọc trực tiếp từ file này.
+- [game.contract.json](game.contract.json) (**v1.2**) ghi đúng số chuẩn. Logic trong `src/sim/` đọc trực tiếp từ file này.
+- Thay đổi phá vỡ tương thích của Phase 3 nằm trong [CHANGELOG.md](CHANGELOG.md). Quyết định thiết kế mô hình đèn và luật thắng nằm trong [ADR 0001](docs/adr/0001-lantern-fuel-and-dawn-win.md).
+- Dầu được lưu bằng số nguyên đơn vị 1/60 để không bị sai số. Snapshot xuất `fuel` với 1 chữ số thập phân.
 - Bản đồ chuẩn nằm trong [src/sim/maps.js](src/sim/maps.js). Mỗi tick chạy đủ 12 bước theo thứ tự trong `Game.step()`.
 - Snapshot có thêm mảng `motes` (id, pos, kind, ttl_s), `drifters` và `charms`. `player.invuln` là boolean, kèm `invuln_s`.
 - Giả định cho các chỗ ticket còn mơ hồ (xuất phát Đêm 3 ở (0,0,−16), thời lượng `spawning`…) nằm trong [docs/notes/phase-2.md](docs/notes/phase-2.md).
@@ -69,8 +76,9 @@ Mọi phần thêm đều **chỉ ở renderer** (`src/web/`), không chạm và
 - **Chuông ngũ cung:** toàn bộ âm thanh và nhạc nền được tạo bằng WebAudio, không dùng file. Nhặt đom đóm cho nốt cao dần theo số đang mang; thắp đèn cho hợp âm.
 - **Ông Đăng:** mỗi Đêm mở đầu bằng một lời dặn riêng của ông.
 - **Lá bay báo gió:** 2 s trước mỗi cơn gió ở Đêm 3, lá bay theo đúng hướng gió sắp thổi.
+- **Đèn trời** ở Phase 3 vẫn bay lên mỗi lần thắp, kể cả thắp lại. Ánh sáng của đèn mờ dần theo lượng dầu còn lại.
 
-Bằng chứng phần cũ vẫn đúng: `npm test` (39/39) và `npm run proof -- phase-2` (21/21 case, 2 lần chạy giống hệt nhau) đều đạt. Xem [docs/proof/phase-2/](docs/proof/phase-2/README.md).
+Bằng chứng phần cũ vẫn đúng: `npm test` (48/48) và `npm run proof -- phase-3` (29/29 case, 2 lần chạy giống hệt nhau) đều đạt. Xem [docs/proof/phase-3/](docs/proof/phase-3/README.md).
 
 ## Cấu trúc
 

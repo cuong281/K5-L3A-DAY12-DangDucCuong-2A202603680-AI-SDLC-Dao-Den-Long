@@ -1,6 +1,7 @@
 # AGENTS.md — Đảo Đèn Lồng
 
-3D game (Three.js web) + deterministic headless mode per Test Contract **v1.1** (Ticket-02). Node ≥ 18, plain ES modules.
+3D game (Three.js web) + deterministic headless mode per Test Contract **v1.2** (Ticket-03 on top of Ticket-02). Node ≥ 18, plain ES modules.
+Design decisions: docs/adr/ · Breaking changes: CHANGELOG.md (update it whenever a ticket replaces a rule).
 
 ## Commands
 - Install: `npm install` · Play: `npm run dev` (http://localhost:5173)
@@ -20,6 +21,9 @@
 ## Rules
 - Ticket numbers/order are law. Tick: snapshot 0 before input; step k reads input k, events tick k+1; pause: tick++ but sim frozen.
 - Distances XZ with `<=`; pulse uses 3D distance from foot+0.8. Round 3 decimals. Exit 2 on bad inputs/scenario.
+- Lantern fuel is integer 1/60 units (`l.fu`); only round (1 decimal) on output. Zone = lit && fuel >= 30. Win only at dawn.
+- Speeds: helpers that take m/s divide by 60 themselves — never pass an already per-tick value (Phase 3 bug).
+- When a ticket replaces a rule: update the test with a `[P<n> updated/replaced]` reason, never skip it; log it in CHANGELOG.md.
 - Any rule change = sim + unit test + a scenario case. Creative extras must be render-only (headless output unchanged).
 - Expected values in tests/cases must be **computed by hand from the ticket**, never copied from program output. Watch off-by-one: counters decrement in phase 2, entities move (phase 8) before contact (phase 9).
 - Never hand-edit docs/proof/. Never weaken a test; if a requirement changed, update it and write why (`why` field / docs/notes).

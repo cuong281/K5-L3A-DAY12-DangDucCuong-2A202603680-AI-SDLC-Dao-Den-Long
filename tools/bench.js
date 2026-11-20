@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import puppeteer from 'puppeteer-core';
 
+const PHASE = process.env.PROOF_PHASE || "phase-2";
 const secs = parseFloat(process.argv[2] || '10');
 const base = process.argv[3] || 'http://localhost:4173';
 const candidates = [
@@ -34,13 +35,13 @@ for (const night of [1, 2, 3]) {
     return ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : 'unknown';
   });
   const fps = parseFloat(title.split(' ')[1]);
-  await page.screenshot({ path: `docs/proof/phase-2/fps-night${night}.png` });
+  await page.screenshot({ path: `docs/proof/${PHASE}/fps-night${night}.png` });
   results.push({ night, fps, gpu });
   console.log(`night ${night}: ${fps} FPS avg over ${secs}s @1280x720 (${gpu})`);
   await page.close();
 }
 await browser.close();
 const out = { date: new Date().toISOString(), cpu: os.cpus()[0].model, platform: `${os.platform()} ${os.release()}`, seconds: secs, results, pass: results.every((r) => r.fps >= 30) };
-fs.writeFileSync('docs/proof/phase-2/fps.json', JSON.stringify(out, null, 2));
+fs.writeFileSync(`docs/proof/${PHASE}/fps.json`, JSON.stringify(out, null, 2));
 console.log(out.pass ? 'PASS (>= 30 FPS on every night)' : 'FAIL (< 30 FPS)');
 process.exit(out.pass ? 0 : 1);
