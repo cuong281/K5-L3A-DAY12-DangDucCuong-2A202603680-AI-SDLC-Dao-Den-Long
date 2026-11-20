@@ -1,0 +1,40 @@
+{
+ "seed": 3,
+ "ticks": 1500,
+ "snapshot_every": 240,
+ "why": "Đêm 1 mặc định: 20 đom đóm lúc đầu, +1 mỗi 240 tick tới hết 24 điểm (tick 960). Bóng Mực: 2 con tick 300 (S1,S2), +1 mỗi 480 tick (S3 tick 780, S4 tick 1260).",
+ "expect": {
+  "event_names": [
+   "300:shade_spawned",
+   "300:shade_spawned",
+   "780:shade_spawned",
+   "1260:shade_spawned"
+  ],
+  "snapshots": [
+   {
+    "tick": 0,
+    "match": {
+     "motes_active": 20
+    }
+   },
+   {
+    "tick": 240,
+    "match": {
+     "motes_active": 21
+    }
+   },
+   {
+    "tick": 960,
+    "match": {
+     "motes_active": 24
+    }
+   },
+   {
+    "tick": 1440,
+    "match": {
+     "motes_active": 24
+    }
+   }
+  ]
+ }
+}

@@ -1,2 +1,38 @@
-{ "seed": 1, "ticks": 1200, "why": "Người chơi đứng tại đèn đã thắp (bán kính an toàn 6 m). Bóng Mực không vào được -> không bị chạm trong 20 s, vẫn 3 lửa. Đèn đặt sẵn lit không cộng điểm.",
-  "expect": { "end": { "state": "playing", "ticks": 1200, "score": 0 }, "no_events": ["player_hit", "lantern_lit"] } }
+{
+ "seed": 1,
+ "ticks": 1200,
+ "snapshot_every": 600,
+ "why": "[P2 cập nhật: shade ở 10 m để nó chase; vùng an toàn chặn đúng ở mép 6 m] Người chơi đứng tại đèn đã sáng. Bóng Mực bị chặn ở (6,0,0), không chạm được trong 20 s. Đèn đặt sẵn không cộng điểm.",
+ "expect": {
+  "end": {
+   "state": "playing",
+   "ticks": 1200,
+   "score": 0
+  },
+  "no_events": [
+   "player_hit",
+   "lantern_lit"
+  ],
+  "snapshots": [
+   {
+    "tick": 600,
+    "match": {
+     "shades": [
+      {
+       "id": "S1",
+       "pos": [
+        6,
+        0,
+        0
+       ],
+       "state": "chase"
+      }
+     ],
+     "player": {
+      "flames": 3
+     }
+    }
+   }
+  ]
+ }
+}

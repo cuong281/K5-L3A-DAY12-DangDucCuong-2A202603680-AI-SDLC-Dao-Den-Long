@@ -16,9 +16,20 @@ const scenDir = path.join(root, 'scenarios');
 
 const sub = (actual, expected) =>
   Object.entries(expected).every(([k, v]) => JSON.stringify(actual?.[k]) === JSON.stringify(v));
+// recursive subset match; numbers within 1e-3; arrays of {id} matched by id
+function matches(a, e) {
+  if (typeof e === 'number') return typeof a === 'number' && Math.abs(a - e) <= 1e-3;
+  if (Array.isArray(e)) {
+    if (!Array.isArray(a)) return false;
+    if (e.every((x) => x && typeof x === 'object' && 'id' in x)) return e.every((x) => matches(a.find((y) => y.id === x.id), x));
+    return a.length === e.length && e.every((x, i) => matches(a[i], x));
+  }
+  if (e && typeof e === 'object') return a && typeof a === 'object' && Object.entries(e).every(([k, v]) => matches(a[k], v));
+  return a === e;
+}
 
 function runOnce(dir, c, out) {
-  const args = ['headless.js', '--seed', String(c.seed), '--night', '1', '--ticks', String(c.ticks), '--out', out];
+  const args = ['headless.js', '--seed', String(c.seed), '--night', String(c.night ?? 1), '--ticks', String(c.ticks), '--out', out];
   if (fs.existsSync(path.join(dir, 'scenario.json'))) args.push('--scenario', path.join(dir, 'scenario.json'));
   if (fs.existsSync(path.join(dir, 'inputs.json'))) args.push('--inputs', path.join(dir, 'inputs.json'));
   if (c.snapshot_every) args.push('--snapshot-every', String(c.snapshot_every));
@@ -53,6 +64,15 @@ for (const name of fs.readdirSync(scenDir).sort()) {
       problems.push(`missing event ${JSON.stringify(e)}`);
   }
   for (const n of c.expect?.no_events || []) if (events.some((x) => x.name === n)) problems.push(`unexpected event ${n}`);
+  if (c.expect?.event_names) {
+    const got = events.filter((x) => x.tick > 0).map((x) => `${x.tick}:${x.name}`);
+    if (JSON.stringify(got) !== JSON.stringify(c.expect.event_names)) problems.push(`events ${JSON.stringify(got)} != ${JSON.stringify(c.expect.event_names)}`);
+  }
+  for (const sx of c.expect?.snapshots || []) {
+    const snap = lines.find((l) => l.type === 'snapshot' && l.tick === sx.tick);
+    if (!snap) problems.push(`no snapshot at tick ${sx.tick}`);
+    else if (!matches(snap, sx.match)) problems.push(`snapshot ${sx.tick} does not match ${JSON.stringify(sx.match)}`);
+  }
   if (problems.length) failed++;
   rows.push({ name, why: c.why, cmd: a.cmd, end, deterministic, problems, nEvents: events.length });
 }

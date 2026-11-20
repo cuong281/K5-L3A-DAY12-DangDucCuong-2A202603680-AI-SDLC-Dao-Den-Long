@@ -1,2 +1,43 @@
-{ "seed": 7, "ticks": 18000, "snapshot_every": 600, "why": "Đêm đầy đủ với sinh ngẫu nhiên (seed 7), người chơi đứng yên: Bóng Mực tới chạm 3 lần -> thua no_flames. Kiểm tra tính tất định của id tự sinh.",
-  "expect": { "end": { "state": "lost" } } }
+{
+ "seed": 7,
+ "ticks": 18000,
+ "snapshot_every": 600,
+ "why": "[P2 cập nhật] Đêm 1 đầy đủ, sinh ngẫu nhiên, đứng yên ở tâm: Bóng Mực sinh ở bán kính 37 m, chỉ phát hiện trong 12 m nên không tới -> thua dawn ở tick 18000. Kiểm tra tất định và id tự sinh.",
+ "expect": {
+  "end": {
+   "state": "lost",
+   "ticks": 18000
+  },
+  "events": [
+   {
+    "tick": 300,
+    "name": "shade_spawned",
+    "data": {
+     "id": "S1"
+    }
+   },
+   {
+    "tick": 300,
+    "name": "shade_spawned",
+    "data": {
+     "id": "S2"
+    }
+   },
+   {
+    "tick": 2220,
+    "name": "shade_spawned",
+    "data": {
+     "id": "S6"
+    }
+   },
+   {
+    "tick": 18000,
+    "name": "game_over",
+    "data": {
+     "result": "lost",
+     "reason": "dawn"
+    }
+   }
+  ]
+ }
+}

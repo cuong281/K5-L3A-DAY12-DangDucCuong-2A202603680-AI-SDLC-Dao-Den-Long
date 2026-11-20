@@ -1,0 +1,85 @@
+{
+ "seed": 1,
+ "night": 2,
+ "ticks": 250,
+ "snapshot_every": 1,
+ "why": "Tỏa sáng trúng D1 (flee, đang mang 2) -> thả 2 đom đóm rơi tại chỗ, biến mất sau 120 tick (tick 121). Trúng D2 đang chase -> flee không cướp, biến mất sau 240 tick (tick 241).",
+ "expect": {
+  "events": [
+   {
+    "tick": 1,
+    "name": "drifter_drop",
+    "data": {
+     "drifter_id": "D1",
+     "amount": 2
+    }
+   },
+   {
+    "tick": 1,
+    "name": "pulse",
+    "data": {
+     "stunned_ids": []
+    }
+   }
+  ],
+  "no_events": [
+   "drifter_steal"
+  ],
+  "snapshots": [
+   {
+    "tick": 1,
+    "match": {
+     "drifters": [
+      {
+       "id": "D1",
+       "state": "flee",
+       "stolen": 0
+      },
+      {
+       "id": "D2",
+       "state": "flee",
+       "stolen": 0
+      }
+     ],
+     "motes_active": 2
+    }
+   },
+   {
+    "tick": 120,
+    "match": {
+     "drifters": [
+      {
+       "id": "D1",
+       "state": "flee"
+      }
+     ]
+    }
+   },
+   {
+    "tick": 121,
+    "match": {
+     "drifters": [
+      {
+       "id": "D1",
+       "state": "removed"
+      }
+     ]
+    }
+   },
+   {
+    "tick": 241,
+    "match": {
+     "drifters": [
+      {
+       "id": "D2",
+       "state": "removed"
+      }
+     ],
+     "player": {
+      "carried": 3
+     }
+    }
+   }
+  ]
+ }
+}

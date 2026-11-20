@@ -1,0 +1,64 @@
+{
+ "seed": 1,
+ "ticks": 130,
+ "snapshot_every": 1,
+ "why": "Mang 3, S1 cách tâm tỏa sáng (chân+0.8) 3.0 m -> choáng; S2 cách 5.85 m theo 3D (dù XZ chỉ 4.9 m) -> không. S1 bị đẩy 4 m trong 15 tick (x 3->7), choáng tới hết tick 120, tick 121 chuyển chase (cách 7 m < 12). Điểm +5.",
+ "expect": {
+  "events": [
+   {
+    "tick": 1,
+    "name": "pulse",
+    "data": {
+     "stunned_ids": [
+      "S1"
+     ]
+    }
+   }
+  ],
+  "snapshots": [
+   {
+    "tick": 15,
+    "match": {
+     "shades": [
+      {
+       "id": "S1",
+       "pos": [
+        7,
+        1,
+        0
+       ],
+       "state": "stunned"
+      }
+     ],
+     "score": 5,
+     "player": {
+      "carried": 0,
+      "pulse_cd_s": 2.767
+     }
+    }
+   },
+   {
+    "tick": 120,
+    "match": {
+     "shades": [
+      {
+       "id": "S1",
+       "state": "stunned"
+      }
+     ]
+    }
+   },
+   {
+    "tick": 121,
+    "match": {
+     "shades": [
+      {
+       "id": "S1",
+       "state": "chase"
+      }
+     ]
+    }
+   }
+  ]
+ }
+}

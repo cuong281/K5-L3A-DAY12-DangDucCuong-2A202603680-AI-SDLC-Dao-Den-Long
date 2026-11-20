@@ -1,0 +1,39 @@
+{
+ "seed": 1,
+ "ticks": 120,
+ "snapshot_every": 12,
+ "why": "Lướt đứng yên -> theo hướng mặt +Z, 14 m/s x 12 tick = 2.8 m (tick 12); hồi chiêu còn 90-11=79 tick = 1.317 s. Nhấn lại ở tick 30: còn hồi chiêu -> bỏ qua. Hồi chiêu 90 tick tính từ lúc bắt đầu -> nhấn ở tick 90 được (sự kiện tick 91). Tổng 5.6 m.",
+ "expect": {
+  "event_names": [
+   "1:dash",
+   "91:dash"
+  ],
+  "snapshots": [
+   {
+    "tick": 12,
+    "match": {
+     "player": {
+      "pos": [
+       0,
+       0,
+       2.8
+      ],
+      "dash_cd_s": 1.317
+     }
+    }
+   },
+   {
+    "tick": 108,
+    "match": {
+     "player": {
+      "pos": [
+       0,
+       0,
+       5.6
+      ]
+     }
+    }
+   }
+  ]
+ }
+}

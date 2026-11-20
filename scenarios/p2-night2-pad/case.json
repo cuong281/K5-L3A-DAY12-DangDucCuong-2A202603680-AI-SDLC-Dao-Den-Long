@@ -1,0 +1,28 @@
+{
+ "seed": 1,
+ "night": 2,
+ "ticks": 90,
+ "snapshot_every": 84,
+ "why": "Đứng lên bục (20,0,18): bay Y 14 m/s, ngang 24 m/s về tâm đảo B; 2x14/20 = 1.4 s = 84 tick. Phóng ở cuối bước 0 nên bay ngang 83 tick x 0.4 m = 33.2 m theo (50,-18)/53.14 -> đáp (51.237, 0, 6.755) trong đảo B.",
+ "expect": {
+  "no_events": [
+   "player_hit"
+  ],
+  "snapshots": [
+   {
+    "tick": 84,
+    "match": {
+     "player": {
+      "grounded": true,
+      "flames": 3,
+      "pos": [
+       51.237,
+       0,
+       6.755
+      ]
+     }
+    }
+   }
+  ]
+ }
+}

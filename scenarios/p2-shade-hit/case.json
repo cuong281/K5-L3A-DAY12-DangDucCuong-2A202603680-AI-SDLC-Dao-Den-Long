@@ -1,0 +1,72 @@
+{
+ "seed": 1,
+ "ticks": 400,
+ "snapshot_every": 1,
+ "why": "S1 (1,1,0) và S2 (-1,1,0) cùng chạm ở bước 0: chỉ mất 1 lửa (S1, id nhỏ). Rơi floor(5/2)=2 đom đóm (dropped, ttl 8 s). S1 recoil 2 m trong 60 tick, bất tử 90 tick; chạm lại ở tick 91 và 181 -> hết lửa, thua no_flames tick 181.",
+ "expect": {
+  "end": {
+   "state": "lost",
+   "ticks": 181
+  },
+  "event_names": [
+   "1:player_hit",
+   "91:player_hit",
+   "181:player_hit",
+   "181:game_over"
+  ],
+  "events": [
+   {
+    "tick": 1,
+    "name": "player_hit",
+    "data": {
+     "by": "shade",
+     "flames": 2,
+     "dropped": 2
+    }
+   },
+   {
+    "tick": 91,
+    "name": "player_hit",
+    "data": {
+     "by": "shade",
+     "flames": 1,
+     "dropped": 1
+    }
+   }
+  ],
+  "snapshots": [
+   {
+    "tick": 1,
+    "match": {
+     "player": {
+      "carried": 3,
+      "invuln": true
+     },
+     "shades": [
+      {
+       "id": "S1",
+       "state": "recoil"
+      }
+     ],
+     "motes_active": 2
+    }
+   },
+   {
+    "tick": 60,
+    "match": {
+     "shades": [
+      {
+       "id": "S1",
+       "pos": [
+        2.933,
+        1,
+        0
+       ],
+       "state": "recoil"
+      }
+     ]
+    }
+   }
+  ]
+ }
+}

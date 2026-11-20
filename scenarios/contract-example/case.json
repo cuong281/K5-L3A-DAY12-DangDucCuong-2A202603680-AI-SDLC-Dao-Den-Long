@@ -1,4 +1,19 @@
-{ "seed": 1, "ticks": 400, "why": "Ví dụ trong Test Contract: đi +Z nhặt đom đóm ở z=5 (bán kính 1.2 -> chạm khi z>=3.8, tức tick 38), tỏa sáng ở tick 200 làm choáng S1.",
-  "expect": { "end": { "state": "playing", "ticks": 400 },
-              "events": [ { "tick": 38, "name": "mote_picked", "data": { "carried": 1 } },
-                          { "tick": 201, "name": "pulse", "data": { "stunned_ids": ["S1"] } } ] } }
+{
+ "seed": 1,
+ "ticks": 400,
+ "why": "[P2 cập nhật] Ví dụ trong Test Contract. pickup 1.0 m -> đom đóm ở z=5 được nhặt khi z>=4.0, tức sau 40 bước (tick 40). Tỏa sáng ở tick 200 KHÔNG kích hoạt vì chỉ mang 1 < pulse_cost 3 (P1: tick 38 và có pulse).",
+ "expect": {
+  "events": [
+   {
+    "tick": 40,
+    "name": "mote_picked",
+    "data": {
+     "carried": 1
+    }
+   }
+  ],
+  "no_events": [
+   "pulse"
+  ]
+ }
+}

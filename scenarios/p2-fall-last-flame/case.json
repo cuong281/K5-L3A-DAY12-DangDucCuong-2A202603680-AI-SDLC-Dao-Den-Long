@@ -1,0 +1,15 @@
+{
+ "seed": 1,
+ "ticks": 300,
+ "why": "Rơi khi chỉ còn 1 lửa -> thua ngay no_flames ở tick 70, không hồi sinh.",
+ "expect": {
+  "end": {
+   "state": "lost",
+   "ticks": 70
+  },
+  "event_names": [
+   "70:player_hit",
+   "70:game_over"
+  ]
+ }
+}

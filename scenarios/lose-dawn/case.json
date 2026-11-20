@@ -1,3 +1,22 @@
-{ "seed": 1, "ticks": 1000, "why": "Hết giờ (2 s = 120 tick) -> thua dawn ở tick 120, dừng sớm.",
-  "expect": { "end": { "state": "lost", "ticks": 120, "score": 0 },
-              "events": [ { "tick": 120, "name": "game_over", "data": { "result": "lost", "reason": "dawn" } } ] } }
+{
+ "seed": 1,
+ "ticks": 1000,
+ "why": "Hết giờ (2 s = 120 tick) -> thua dawn ở tick 120, dừng sớm.",
+ "expect": {
+  "end": {
+   "state": "lost",
+   "ticks": 120,
+   "score": 0
+  },
+  "events": [
+   {
+    "tick": 120,
+    "name": "game_over",
+    "data": {
+     "result": "lost",
+     "reason": "dawn"
+    }
+   }
+  ]
+ }
+}

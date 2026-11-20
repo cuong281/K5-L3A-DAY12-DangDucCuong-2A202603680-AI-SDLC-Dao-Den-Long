@@ -1,0 +1,52 @@
+{
+ "seed": 5,
+ "night": 3,
+ "ticks": 2160,
+ "snapshot_every": 60,
+ "why": "Đêm 3: gió mỗi 30 s (tick 1800) kéo 5 s (tới tick 2100), hướng báo trước 2 s (tick 1680).",
+ "expect": {
+  "snapshots": [
+   {
+    "tick": 1620,
+    "match": {
+     "wind": {
+      "active": false,
+      "dir_deg": null
+     }
+    }
+   },
+   {
+    "tick": 1740,
+    "match": {
+     "wind": {
+      "active": false
+     }
+    }
+   },
+   {
+    "tick": 1800,
+    "match": {
+     "wind": {
+      "active": true
+     }
+    }
+   },
+   {
+    "tick": 2040,
+    "match": {
+     "wind": {
+      "active": true
+     }
+    }
+   },
+   {
+    "tick": 2100,
+    "match": {
+     "wind": {
+      "active": false
+     }
+    }
+   }
+  ]
+ }
+}

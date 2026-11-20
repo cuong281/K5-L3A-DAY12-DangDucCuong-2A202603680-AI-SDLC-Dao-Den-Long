@@ -1,5 +1,31 @@
-{ "seed": 1, "ticks": 1000, "why": "Thắp đủ 5 đèn -> thắng all_lit ở tick 151. Điểm = 5*100 + 2*floor(300-151/60)=2*297 + 50*3 = 500+594+150 = 1244.",
-  "expect": { "end": { "state": "won", "ticks": 151, "score": 1244 },
-              "events": [ { "tick": 31, "name": "deposit", "data": { "lantern_id": "L1", "amount": 5, "deposited": 5 } },
-                          { "tick": 31, "name": "lantern_lit", "data": { "lantern_id": "L1" } },
-                          { "tick": 151, "name": "game_over", "data": { "result": "won", "reason": "all_lit" } } ] } }
+{
+ "seed": 1,
+ "ticks": 100,
+ "why": "[P2 cập nhật: lantern_cost 10, điểm theo đom đóm nạp] L1-L4 sáng sẵn (không cộng điểm), đứng ở L5 chuẩn mang 10, nhấn E ở tick 0 -> thắng tick 1. Điểm = 10x10 + 100 + 2xfloor((18000-1)/60)=598 + 50x3 = 948.",
+ "expect": {
+  "end": {
+   "state": "won",
+   "ticks": 1,
+   "score": 948
+  },
+  "events": [
+   {
+    "tick": 1,
+    "name": "deposit",
+    "data": {
+     "lantern_id": "L5",
+     "amount": 10,
+     "deposited": 10
+    }
+   },
+   {
+    "tick": 1,
+    "name": "game_over",
+    "data": {
+     "result": "won",
+     "reason": "all_lit"
+    }
+   }
+  ]
+ }
+}

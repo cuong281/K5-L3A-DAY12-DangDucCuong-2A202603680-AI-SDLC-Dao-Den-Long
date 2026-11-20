@@ -1,0 +1,48 @@
+{
+ "seed": 1,
+ "night": 2,
+ "ticks": 61,
+ "snapshot_every": 1,
+ "why": "Bùa C1 ở (35,0,0) trên cầu. Bước 0 đi 6 m/s tới x=34.1 rồi nhặt (khoảng cách 0.9) -> charm_picked tick 1 (600 tick). Từ bước 1 tốc độ 7.2 m/s: tick 61 x = 34.1 + 60x0.12 = 41.3. Bùa xuất hiện lại sau 2700 tick = 45 s.",
+ "expect": {
+  "events": [
+   {
+    "tick": 1,
+    "name": "charm_picked",
+    "data": {
+     "charm_id": "C1",
+     "charm_ticks": 600
+    }
+   }
+  ],
+  "snapshots": [
+   {
+    "tick": 1,
+    "match": {
+     "charms": [
+      {
+       "id": "C1",
+       "available": false,
+       "respawn_s": 45
+      }
+     ],
+     "player": {
+      "charm_s": 10
+     }
+    }
+   },
+   {
+    "tick": 61,
+    "match": {
+     "player": {
+      "pos": [
+       41.3,
+       0,
+       0
+      ]
+     }
+    }
+   }
+  ]
+ }
+}

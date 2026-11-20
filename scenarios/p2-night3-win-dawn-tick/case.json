@@ -1,0 +1,23 @@
+{
+ "seed": 1,
+ "night": 3,
+ "ticks": 10,
+ "why": "Thắng kể cả đúng tick hết giờ: time_left 1/60, thắp đèn cuối L7 ở bước 0 -> won (không phải dawn). Điểm 100+100+0+150=350.",
+ "expect": {
+  "end": {
+   "state": "won",
+   "ticks": 1,
+   "score": 350
+  },
+  "events": [
+   {
+    "tick": 1,
+    "name": "game_over",
+    "data": {
+     "result": "won",
+     "reason": "all_lit"
+    }
+   }
+  ]
+ }
+}

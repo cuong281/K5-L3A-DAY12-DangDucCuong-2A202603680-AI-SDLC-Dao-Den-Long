@@ -1,0 +1,63 @@
+{
+ "seed": 1,
+ "night": 2,
+ "ticks": 400,
+ "snapshot_every": 4,
+ "why": "Gió Lạc D1 idle cách 10 m; Mây mang 6 (>=5, <=15 m) -> chase 7 m/s. Chạm khi <=1.2 m: 8.8/(7/60)=75.4 -> tick 76, cướp min(3,6)=3 dù Mây đang bất tử. Flee 240 tick -> removed ở tick 316. Không mất lửa.",
+ "expect": {
+  "events": [
+   {
+    "tick": 76,
+    "name": "drifter_steal",
+    "data": {
+     "drifter_id": "D1",
+     "amount": 3,
+     "carried": 3
+    }
+   }
+  ],
+  "no_events": [
+   "player_hit"
+  ],
+  "snapshots": [
+   {
+    "tick": 4,
+    "match": {
+     "drifters": [
+      {
+       "id": "D1",
+       "state": "chase"
+      }
+     ]
+    }
+   },
+   {
+    "tick": 312,
+    "match": {
+     "drifters": [
+      {
+       "id": "D1",
+       "state": "flee",
+       "stolen": 3
+      }
+     ]
+    }
+   },
+   {
+    "tick": 316,
+    "match": {
+     "drifters": [
+      {
+       "id": "D1",
+       "state": "removed"
+      }
+     ],
+     "player": {
+      "flames": 3,
+      "carried": 3
+     }
+    }
+   }
+  ]
+ }
+}

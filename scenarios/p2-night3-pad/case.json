@@ -1,0 +1,27 @@
+{
+ "seed": 1,
+ "night": 3,
+ "ticks": 60,
+ "snapshot_every": 60,
+ "why": "Bục (0,3,13) ở tầng 1: Y 12 m/s, ngang 8 m/s hướng -Z -> đáp lên tầng 2 (Y=6, r<8).",
+ "expect": {
+  "no_events": [
+   "player_hit"
+  ],
+  "snapshots": [
+   {
+    "tick": 60,
+    "match": {
+     "player": {
+      "grounded": true,
+      "pos": [
+       0,
+       6,
+       6.467
+      ]
+     }
+    }
+   }
+  ]
+ }
+}
