@@ -36,7 +36,9 @@ const byId = (a, b) => idNum(a.id) - idNum(b.id) || (a.id < b.id ? -1 : a.id > b
 const sec = (ticks) => round3(ticks / TICK_HZ);
 
 export class Game {
-  constructor(tuning, { seed = 0, night = 1, scenario = null } = {}) {
+  constructor(tuning, { seed = 0, night = 1, scenario = null, bench = false } = {}) {
+    // bench (Ticket-04 §1): no spawns, damage, pickup, fuel decay or end conditions. Off for headless.
+    this.bench = bench;
     const T = (this.T = tuning);
     this.night = night;
     this.map = NIGHTS[night];
@@ -347,6 +349,7 @@ export class Game {
     }
     // 2b. fuel: decay + drain, then lanterns with fuel <= 0 go out (Ticket-03)
     for (const l of this.lanterns) {
+      if (this.bench) break;
       if (!l.lit) continue;
       const drainers = this.shades.filter((s) => s.state === 'drain' && s.targetId === l.id);
       l.fu -= this.FU_DECAY + this.FU_DRAIN * drainers.length;
@@ -383,7 +386,7 @@ export class Game {
     respawning = P.respawn > 0;
 
     // 4. pickup motes and charms
-    if (!respawning) {
+    if (!respawning && !this.bench) {
       for (let i = 0; i < this.motes.length && P.carried < this.capacity(); ) {
         const m = this.motes[i];
         if (hd(m.pos, P.pos) <= T.pickup_radius && Math.abs(P.pos[1] - m.pos[1]) <= C.PICKUP_DY) {
@@ -557,7 +560,7 @@ export class Game {
     }
 
     // 9. contact: drifters steal first, then shades hit (ascending id), max one flame per tick
-    if (!respawning) {
+    if (!respawning && !this.bench) {
       for (const d of [...this.drifters].sort(byId)) {
         if ((d.state !== 'idle' && d.state !== 'chase') || d.hasStolen || P.carried <= 0) continue;
         if (hd(d.pos, P.pos) > C.DRIFTER_TOUCH) continue;
@@ -625,7 +628,8 @@ export class Game {
 
     // 11. win / lose
     // Ticket-03: no early win; at dawn survive with >= ceil(win_ratio * total) lanterns lit
-    if (P.flames <= 0) this.end('lost', 'no_flames');
+    if (this.bench) { /* no end conditions in the bench scene */ }
+    else if (P.flames <= 0) this.end('lost', 'no_flames');
     else if (ns >= this.endSim) {
       const litNow = this.lanterns.filter((l) => l.lit);
       if (litNow.length >= this.winNeed()) {

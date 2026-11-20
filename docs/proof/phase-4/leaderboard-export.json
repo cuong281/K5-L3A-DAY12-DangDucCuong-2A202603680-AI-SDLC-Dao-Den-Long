@@ -1,0 +1,25 @@
+{
+  "entries": [
+    {
+      "name": "Mây_đẹp",
+      "score": 1520,
+      "nights_won": 3,
+      "achieved_at": "2026-11-20T18:21:32+07:00",
+      "seed": 11
+    },
+    {
+      "name": "cuong_01",
+      "score": 640,
+      "nights_won": 1,
+      "achieved_at": "2026-11-20T18:21:18+07:00",
+      "seed": 12
+    },
+    {
+      "name": "Ong_Dang",
+      "score": 640,
+      "nights_won": 1,
+      "achieved_at": "2026-11-20T18:21:32+07:00",
+      "seed": 13
+    }
+  ]
+}
