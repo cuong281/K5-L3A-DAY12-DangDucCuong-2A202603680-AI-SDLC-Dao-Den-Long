@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đảo Đèn Lồng</title>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #0b0614; font-family: system-ui, sans-serif; color: #ffe9c4; }
+    canvas { display: block; }
+    #hud { position: fixed; top: 12px; left: 12px; background: rgba(20, 8, 30, .55); padding: 10px 14px; border-radius: 10px; font-size: 15px; line-height: 1.6; pointer-events: none; min-width: 210px; }
+    #hud b { color: #ffb347; }
+    #hint { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: rgba(20, 8, 30, .6); padding: 8px 16px; border-radius: 8px; pointer-events: none; display: none; }
+    #overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(8, 3, 16, .78); }
+    #overlay .card { max-width: 560px; padding: 28px 32px; background: rgba(40, 18, 50, .92); border: 1px solid #ffb34766; border-radius: 14px; text-align: center; }
+    #overlay h1 { margin: 0 0 8px; color: #ffb347; letter-spacing: 1px; }
+    #overlay p { line-height: 1.55; }
+    #overlay kbd { background: #2a1838; border: 1px solid #ffb34766; border-radius: 4px; padding: 1px 6px; }
+    .bar { height: 6px; background: #3a2448; border-radius: 3px; overflow: hidden; margin-top: 4px; }
+    .bar > div { height: 100%; background: #ffb347; }
+  </style>
+</head>
+<body>
+  <div id="hud"></div>
+  <div id="hint"></div>
+  <div id="overlay"><div class="card" id="card"></div></div>
+  <script type="module" src="/src/web/main.js"></script>
+</body>
+</html>
