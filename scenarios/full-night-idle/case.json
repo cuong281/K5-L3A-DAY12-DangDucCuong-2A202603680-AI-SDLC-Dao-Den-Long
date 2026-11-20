@@ -1,0 +1,2 @@
+{ "seed": 7, "ticks": 18000, "snapshot_every": 600, "why": "Đêm đầy đủ với sinh ngẫu nhiên (seed 7), người chơi đứng yên: Bóng Mực tới chạm 3 lần -> thua no_flames. Kiểm tra tính tất định của id tự sinh.",
+  "expect": { "end": { "state": "lost" } } }

@@ -1,0 +1,5 @@
+{ "seed": 1, "ticks": 1000, "why": "Thắp đủ 5 đèn -> thắng all_lit ở tick 151. Điểm = 5*100 + 2*floor(300-151/60)=2*297 + 50*3 = 500+594+150 = 1244.",
+  "expect": { "end": { "state": "won", "ticks": 151, "score": 1244 },
+              "events": [ { "tick": 31, "name": "deposit", "data": { "lantern_id": "L1", "amount": 5, "deposited": 5 } },
+                          { "tick": 31, "name": "lantern_lit", "data": { "lantern_id": "L1" } },
+                          { "tick": 151, "name": "game_over", "data": { "result": "won", "reason": "all_lit" } } ] } }

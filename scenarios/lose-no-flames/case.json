@@ -1,0 +1,4 @@
+{ "seed": 1, "ticks": 1000, "why": "Bóng Mực cách 5 m, tốc độ 3.5 m/s (0.0583 m/tick), chạm khi khoảng cách <= 1 m: sau 69 bước (5-69*0.05833=0.975). Mất lửa cuối -> thua no_flames; rơi floor(4*0.5)=2 đom đóm.",
+  "expect": { "end": { "state": "lost", "ticks": 69 },
+              "events": [ { "tick": 69, "name": "player_hit", "data": { "by": "shade", "flames": 0, "dropped": 2 } },
+                          { "tick": 69, "name": "game_over", "data": { "result": "lost", "reason": "no_flames" } } ] } }
