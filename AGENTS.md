@@ -27,4 +27,5 @@ Design decisions: docs/adr/ · Breaking changes: CHANGELOG.md (update it wheneve
 - Any rule change = sim + unit test + a scenario case. Creative extras must be render-only (headless output unchanged).
 - Expected values in tests/cases must be **computed by hand from the ticket**, never copied from program output. Watch off-by-one: counters decrement in phase 2, entities move (phase 8) before contact (phase 9).
 - Never hand-edit docs/proof/. Never weaken a test; if a requirement changed, update it and write why (`why` field / docs/notes).
-- Do not push or tag unless the user asks.
+- **Never commit, tag or push** — the owner commits manually (Phase 4 decision). Leave changes in the working tree.
+- Phase 4 commands: `node tools/bench.js --seed 42 --duration 30 --out bench.json` (Chrome window), `node --expose-gc --lite-mode tools/soak.js --seed 7 --nights 10 --out soak.json`, `node play.js [--export-leaderboard f]`. Bench mode (`Game({bench:true})`) must never change headless output.

@@ -4,3 +4,4 @@ dist/
 *.local
 out/
 docs/proof/ci-check/
+release/

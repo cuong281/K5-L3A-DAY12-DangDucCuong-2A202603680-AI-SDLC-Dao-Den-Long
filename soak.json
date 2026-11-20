@@ -15,7 +15,7 @@
   ],
   "mem_start_mb": 39.5,
   "mem_end_mb": 41.3,
-  "duration_s": 2.24,
+  "duration_s": 0.89,
   "ticks": 21993,
   "gc_exposed": true,
   "pass": true
