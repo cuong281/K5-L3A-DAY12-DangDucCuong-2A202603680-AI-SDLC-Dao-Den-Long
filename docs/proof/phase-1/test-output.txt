@@ -1,0 +1,32 @@
+# npm test — 2026-11-20T08:09:31Z — v22.13.1 — MINGW64_NT-10.0-26300
+ok 1 - snapshots every N from tick 0, end line last, exit 0
+ok 2 - default snapshot-every is 10
+ok 3 - contract example: deterministic and byte-identical across runs
+ok 4 - full random night is deterministic for the same seed
+ok 5 - game over stops the run early with end line
+ok 6 - coordinates rounded to 3 decimals
+ok 7 - malformed inputs / scenario -> exit code 2 with stderr message
+ok 8 - missing required args -> non-zero exit
+ok 9 - tick 0 snapshot: player at origin, 5 lanterns, playing
+ok 10 - move [0,1] yaw 0 for 60 ticks travels player_speed metres along +Z
+ok 11 - cam yaw 90: move [0,1] goes +X; move [1,0] goes -Z
+ok 12 - diagonal move [1,1] is normalized to speed
+ok 13 - pickup within pickup_radius, event carries count, score per_mote
+ok 14 - mote just outside pickup_radius is not picked
+ok 15 - carry_capacity limits pickups
+ok 16 - interact deposits, lantern lit at lantern_cost, score per_lantern
+ok 17 - interact is edge-triggered: holding does not deposit again
+ok 18 - partial deposit and out-of-range interact
+ok 19 - lighting the last lantern wins (all_lit) with time/flame bonus
+ok 20 - scenario setup gives no score for pre-lit lanterns
+ok 21 - pulse stuns shades in radius, pushes them, costs pulse_cost, scores per_stun
+ok 22 - pulse respects cooldown and needs pulse_cost light
+ok 23 - shade moves toward player at shade_speed
+ok 24 - shade hit: lose flame, drop hit_drop_ratio of motes, invulnerable for invuln_s
+ok 25 - losing last flame ends the game (no_flames)
+ok 26 - dawn: time runs out -> lost
+ok 27 - shades never enter safe_radius of a lit lantern
+ok 28 - random spawns are deterministic per seed and differ between seeds
+# tests 28
+# pass 28
+# fail 0

@@ -1,0 +1,8 @@
+# Stop-hook check: player_speed temporarily changed 6 -> 7 in game.contract.json (then restored).
+# Expected: hook exits 2 and blocks the agent from finishing.
+Tests are failing — fix them before finishing (do NOT weaken tests):
+not ok 3 - contract example: deterministic and byte-identical across runs
+  name: 'AssertionError'
+  expected: true
+  actual: false
+hook exit=2 (expected 2)
